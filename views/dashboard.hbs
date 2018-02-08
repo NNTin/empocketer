@@ -1,0 +1,30 @@
+
+<h1>Welcome to Empocketer{{#if name}} {{name}}{{/if}}!</h1>
+
+<p>Please add your name so other empocketers know who you are. It can be anything you like. This is your dashboard, where you can create and edit lists, see what you are subscribed to, and add or remove subscriptions.</p>
+<p>This is app is currently in Alpha and will <del>probably</del> definitely have bugs. Please report any problems using the <a href="/bugs">bug reporter</a>, or send a tweet/DM to <a href="https://twitter.com/hughrundle">@hughrundle</a>.
+
+<hr/>
+
+<form action="/dashboard/addname" method="post">
+	<label for="name">Name: </label>
+	<input id="name" type="text" value="{{name}}" name="name">
+	<input class="addNameButton" type="submit" value="Save Name">
+</form>
+
+<form action="/dashboard/addlist" method="post">
+	<label for="list">New List: </label>
+	<input id="list" type="text" name="list">
+	<input class="addListButton" type="submit" value="Save List">
+</form>
+
+<h2>Lists</h2>
+
+<ul class="listing">
+{{#each lists}}
+<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button></li>
+{{/each}}
+</ul>
+
+{{!-- this needs to go under the body because we're looking for elements in the dom --}}
+<script src='/javascripts/dash_scripts.js'></script>

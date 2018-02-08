@@ -1,0 +1,17 @@
+{
+	"APP_NAME" : "my awesome app",
+	"ROOT_URL" : "http://127.0.0.1:3000",	
+	"COOKIE_SECRET" : "my secret phrase or array",
+	"POCKET_CONSUMER_KEY" : "key",
+	"SESSION_PARAMS" : {
+	    "name": "my awesome app",
+	    "resave":false,
+	    "saveUninitialized":false,
+	    "secret":"COOKIE_SECRET"
+	},
+	"EMAIL_HOST": "smtp.examplehost.com",
+	"EMAIL_USER": "username",
+	"EMAIL_PASSWORD": "password",
+	"EMAIL_FROM": "'app bug reporter' postmaster@example.com",
+	"EMAIL_TO": "me@example.com"
+}

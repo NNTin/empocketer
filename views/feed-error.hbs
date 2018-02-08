@@ -1,0 +1,19 @@
+<h1 class="error">Error!</h1>
+
+<p>Sorry, that site couldn't be added because {{error}}</p>
+
+{{#if exists}}
+	<p>If you know the RSS or Atom URL, you can try adding it using the form below. See the list below for tips finding the feed URL manually.</p>
+	<section class="find-feed-tips">
+		<h2>Wordpress</h2>
+		<p>Wordpress feeds usually can be found at http://mysite.wordpress.com/rss.</p>
+	</section>
+	<hr/>
+	<form action="/lists/{{ownerid}}/{{listid}}/addfeeddirectly" method="post">
+		<label for="url">New Feed: </label>
+		<input id="url" type="text" name="url">
+		<input type="submit" value="Add Feed Directly">
+	</form>
+{{/if}}
+
+<a href="{{link}}">Go back to the list</a>

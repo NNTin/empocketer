@@ -1,0 +1,147 @@
+:root {
+  --header-text-color: #0099cc;
+  --success: #6dc066;
+  --warning: #ffa500;
+  --failure: #fd482f;
+  --subtle: #c0c0c0;
+}
+
+html {
+  margin:0;
+  padding:0;
+}
+
+body {
+  margin: 0;
+  padding: 0 50px;
+  font: 110% "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: var(--header-text-color);
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--header-text-color);
+}
+
+hr {
+  color: var(--header-text-color);
+}
+
+input[type="text"] {
+  padding: 0.2em;
+  font-size: 1.2em;
+  border: 1px solid var(--subtle);
+  color: var(--success);
+}
+
+label {
+    display: block;
+    margin: 1em;
+    font-style: italic;
+}
+
+main {
+  display: block;
+  min-height: 70vh;
+}
+
+footer {
+  margin: 0 -50px;
+  padding: 5vw;
+  display: block;
+  min-height: 6em;
+  background-color: var(--subtle);
+}
+
+footer a {
+  color: #fff;
+}
+/* CLASSES */
+
+.addNameButton,
+.addListButton,
+.addFeedButton {
+  padding: 0.25em 1em;
+  color: var(--success);
+  border: 2px solid var(--success);
+  background-color: #fff;
+}
+
+
+.confirm {
+  font-size: 0.8em;
+  padding: 0.25em 1em;
+  color: var(--warning);
+  border: 2px solid var(--warning);
+  background-color: #fff;
+}
+
+.delList,
+.removeButton {
+  padding: 0.25em 1em;
+  color: var(--failure);
+  border: 2px solid var(--failure);
+  background-color: #fff;
+}
+
+.error {
+  color: var(--failure);
+}
+
+.fail {
+  background-color: var(--failure);
+  border: 1px solid red;
+  color: #fff;
+}
+
+form .bugreport {
+  width: 100%;
+}
+
+.list-count {
+  padding: 0 0.25em;
+  border: 1px solid var(--subtle);
+  border-radius: 0.5em;
+  margin: 0 0.5em;
+}
+
+.list-count a {
+    color: var(--subtle);
+}
+
+.listing {
+  list-style: none;
+}
+
+.listing li {
+  margin: 1em 0.5em;
+}
+
+.listing li > a {
+  margin-right: 0.5em;
+}
+
+.logInButton {
+  width: 100%;
+  text-align: center;
+  padding: 2em;
+}
+
+.logInButton a {
+  font-size: 1.5em;
+  padding: 0.25em 1em;
+  color: var(--success);
+  border: 2px solid var(--success);
+}
+
+.reportform {
+  margin-bottom: 4em;
+}
+
+.strikeout {
+  color: var(--failure);
+  text-decoration: line-through;
+}

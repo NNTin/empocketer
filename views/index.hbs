@@ -1,0 +1,14 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{appname}}</p>
+
+<p>{{appname}} is a simple tool to help you stay sane by keeping all your <a href="https://en.wikipedia.org/wiki/Tsundoku">tsundoko</a> in one place: your <a href="https://getpocket.com">Pocket</a> account.<p>
+
+<p>{{title}} stores all the RSS/Atom feeds you want to keep track of, and instead of making you log in to yet another app, it just sends every article that comes through to Pocket. You can create (and in future, share) lists, and if you subscribe to multiple lists that use the same site, {{title}} is smart enough to only send the article to you once. Isn't that nice? 😊</p>
+
+<p>{{title}} is under heavy development and is currently in 'alpha' - things will probably break. If something bad happens, you can <a href="/bugs">report it</a>.</p>
+
+{{#unless user}}
+<p>Get started by logging in.</p>
+
+<div class="logInButton"><a href="/auth/pocket">Log in with Pocket</a></div>
+{{/unless}}
