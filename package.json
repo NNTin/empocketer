@@ -14,6 +14,7 @@
     "express": "~4.15.5",
     "express-session": "^1.15.6",
     "fast-json-stable-stringify": "^2.0.0",
+    "feedparser": "^2.2.9",
     "hbs": "~4.0.1",
     "morgan": "~1.9.0",
     "nedb-core": "^3.0.6",
