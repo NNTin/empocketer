@@ -2,17 +2,26 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var settings = require('../settings');
+var db = require('../nedb.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  if ( req.session && req.session.passport && req.session.passport.user) {
-    var user = req.session.passport.user;
+  // get user details
+	if (req.session && req.session.passport && req.session.passport.user) {
+		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
+			if (err) {return console.error('oh no, error! \n' + err)}
+			renderPage(doc)
+		});
+	} else {
+    renderPage()
   }
-  res.render('index', {
-    appname: settings.APP_NAME,
-    title: settings.APP_NAME,
-    user: user
-  })
+  function renderPage(user){
+    res.render('index', {
+      appname: settings.APP_NAME,
+      title: settings.APP_NAME,
+      user: user
+    });
+  }
 });
 
 // Logout

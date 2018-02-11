@@ -1,6 +1,7 @@
 // require and assign packages
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn; // might have been nice for this to be in the README 🙄
 var settings = require('../settings');
 // require local files
@@ -67,13 +68,24 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
   } else {
     error = req.params.err;
   }
-  res.render('feed-error', {
-    appname: settings.APP_NAME,
-		title: settings.APP_NAME + ' - error with feed',
-    error: error,
-    exists: exists,
-    link: `/lists/${req.params.userId}/${req.params.listId}`
-  });
+  // get user details
+	if (req.session && req.session.passport && req.session.passport.user) {
+		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
+			if (err) {return console.error('oh no, error! \n' + err)}
+			renderPage(doc)
+		});
+  } else {
+    renderPage()
+  }
+  function renderPage(user){
+    res.render('feed-error', {
+      appname: settings.APP_NAME,
+  		title: settings.APP_NAME + ' - error with feed',
+      error: error,
+      exists: exists,
+      link: `/lists/${req.params.userId}/${req.params.listId}`
+    });
+  }
 });
 
 
@@ -116,15 +128,27 @@ router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
   }
 
   function renderList(owner, list, name, feeds){
-    res.render('listdetails', {
-      appname: settings.APP_NAME,
-  		title: settings.APP_NAME + ' - ' + name,
-      listid: req.params.listId,
-      ownerid: req.params.userId,
-      owner: owner,
-      name: name,
-      feeds:feeds
-    })
+    // get user details
+  	if (req.session && req.session.passport && req.session.passport.user) {
+  		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
+  			if (err) {return console.error('oh no, error! \n' + err)}
+  			renderPage(doc)
+  		});
+    } else {
+      renderPage()
+    }
+    function renderPage(user){
+      res.render('listdetails', {
+        appname: settings.APP_NAME,
+        title: settings.APP_NAME + ' - ' + name,
+        listid: req.params.listId,
+        ownerid: req.params.userId,
+        owner: owner,
+        name: name,
+        feeds:feeds,
+        user: user
+      })
+    }
   };
 
 // kick things off

@@ -39,7 +39,14 @@ pocketfeeds.checkUrl = function(link, callback) {
 					// some subpages (e.g. abc.net.au/news) use relative URLs, which are a PITA.
 					// Ini this case we reconstruct the feed from the canonical root URL rather than make users do it.
 					if (elem[0].attribs.href.substring(0,4) != 'http') {
-						feed = response.req._headers.protocol + '//' + response.req._headers.host + elem[0].attribs.href;
+						// check whether the feed uses http or https
+						// we use the 'private' field _headers here (instead of headers) but tbh I'm not sure why. This may no longer be necessary, need to check recent node and Express docs.
+						if (response.req._headers.protocol) {
+								feed = response.req._headers.protocol + '//' + response.req._headers.host + elem[0].attribs.href;
+						} else {
+							// if protocol is not in the headers, use http and hope it gets upgraded if necessary
+							feed = 'http://' + response.req._headers.host + elem[0].attribs.href;
+						}
 						// it's theoretically possible they forgot to set a title on the page
 						if (titleElem[0].children[0].data) {
 							title = titleElem[0].children[0].data;
@@ -71,26 +78,26 @@ pocketfeeds.checkUrl = function(link, callback) {
 
 // send article to subscribers (Set)
 pocketfeeds.sendArticle = function(link, token, callback) {
-		request.post({url: `https://getpocket.com/v3/add?consumer_key=${settings.POCKET_CONSUMER_KEY}&access_token=${token}&url=${link}&tags=empocketer`}, function (err, res, body){
-			callback(err, res, body)
-			if (err) {
-				callback(err, null)
-			} else {
-				callback(null, true)
-			}
-		});
+	request.post({url: `https://getpocket.com/v3/add?consumer_key=${settings.POCKET_CONSUMER_KEY}&access_token=${token}&url=${link}&tags=empocketer`}, function (err, res, body){
+		if (err) {
+			callback(err, null)
+		} else {
+			callback(null, true)
+		}
+	});
 }
 
 // get subscribers from lists (Object)
 pocketfeeds.getSubscribers = function(link, listIds, callback) {
 	// for each list get subscribers array
-	listIds.forEach( function(id){
+// console.log(listIds)
+	listIds.forEach(function(id){
 		db.lists.findOne({_id: id}, function(err, doc){
 			// subscribers is an array
 			var subscribers = doc.subscribers;
 			subscribers.forEach(function(subscriber) {
-				// send the article to the subscriber
-				pocketfeeds.sendArticle(link, subscriber, callback);
+			// send the article to the subscriber
+			pocketfeeds.sendArticle(link, subscriber, callback);
 			});
 		});
 	});
@@ -98,21 +105,30 @@ pocketfeeds.getSubscribers = function(link, listIds, callback) {
 
 // get lists subscribing to this feed
 pocketfeeds.getListIds = function(link, feedId, callback) {
-	var feed = db.feeds.findOne({_id: feedId}, function(err, doc){
+	// find the lists for this feed
+	var feed = db.feeds.findOne({_id: feedId}, function(err, doc) {
+		// check the lists array isn't empty (it shouldn't be, because we should have deleted the feed listing)
+		if (doc.lists.length > 0) {
 		var listIds = [];
-		function addId(id){
-			listIds.push(id)
+		// each feed might have multiple lists. doc is an array, so we need to iterate over it then push to listIds.
+		function pushIds(callback) {
+			for (i = 0; i < doc.lists.length; i++) {
+				listIds.push(doc.lists[i])
+			}
+			return callback(null, listIds)
 		}
-		// each feed might have multiple lists. doc is an array, so we need to iterate over it then push to listIds from outside the loop.
-		for (i = 0; i < doc.lists.length; i++) {
-			addId(doc.lists[i])
+	// get Subscribers using the listIds array
+	// we use another callback here so that the for loop completes before we grab the listIds array
+			pushIds(function(err, listIds){
+				if (err) {console.log('there was an error')};
+				// 'callback' here is the one from the outside function, not the callback we're in, obviously
+				pocketfeeds.getSubscribers(link, listIds, callback);
+			})
 		}
-		pocketfeeds.getSubscribers(link, listIds, callback);
 	})
 }
 
 // set new start timer
-
 pocketfeeds.setNewTime = function(id, time) {
 	var now = Date.now();
 	var nowDate = new Date(now);
@@ -133,70 +149,76 @@ pocketfeeds.setNewTime = function(id, time) {
 
 // check for new articles when the timer goes off
 pocketfeeds.getFreshArticles = function() {
+
+	function startFeedParser(lastRun){
+		db.feeds.find({}, function(err, docs){
+			docs.forEach(function(doc){
+				var feed = doc;
+				var req = request(feed.feed)
+				var feedparser = new FeedParser();
+				req.on('error', function (error) {
+				  // handle any request errors
+					// probably should do something more sophisticated
+					console.error(`error requesting ${feed.feed} \n error`)
+				});
+
+				req.on('response', function (res) {
+				  var stream = this; // `this` is `req`, which is a stream
+				  if (res.statusCode !== 200) {
+				    this.emit('error', new Error('Bad status code'));
+				  }
+				  else {
+				    stream.pipe(feedparser);
+				  }
+				});
+				feedparser.on('error', function (error) {
+					//TODO this isn't really "handling"! BUT it doesn't actually stop the app running
+					console.error(`error piping stream from ${feed.feed} - ${error}`);
+				});
+				feedparser.on('readable', function () {
+				  var stream = this;
+				  var meta = this.meta;
+				  var item;
+				  while (item = stream.read()) {
+						// only check items published since the last time the bot ran.
+						if (item.date > lastRun){
+							var link = item.link;
+							var feedId = feed._id;
+							// then for each new article...
+							pocketfeeds.getListIds(link, feedId, function(error, result){
+								if (error) {
+									console.error(`error with ${link} \n ${error}`)
+								} else {
+									console.log(`sent ${link} with no errors: ${result}`)
+								}
+							});
+						}
+				  }
+				});
+				feedparser.on('end', ()=> {
+					// done with this feed
+				});
+			});
+			// done with everything
+			console.log(`finished loop`)
+		});
+	}; // end of startFeedParser
+
+	// this is actually where we start, then everything moves upwards
 	// retrieve the last runtime from the database, or if there isn't one, use four hours
-	var lastRun = db.timer.findOne({}, function(err, doc){
+	db.timer.findOne({}, function(err, doc){
 		if (err) {
 			return console.error(`ERROR with database: \n ${err}`)
 		} else if (doc === null) {
 			pocketfeeds.setNewTime(null);
-			return 14400000;
+			startFeedParser(14400000);
 		} else {
 			pocketfeeds.setNewTime(doc._id, doc.startTime);
-			return doc.startTime;
+			startFeedParser(doc.startTime);
 		}
 	});
+} // end of getFreshArticles
 
-	db.feeds.find({}, function(err, docs){
-		docs.forEach(function(doc){
-			var feed = doc;
-			var req = request(feed.feed)
-			var feedparser = new FeedParser();
-			req.on('error', function (error) {
-			  // handle any request errors
-				// probably should do something more sophisticated
-				console.error(`error requesting ${feed}`)
-			});
-
-			req.on('response', function (res) {
-			  var stream = this; // `this` is `req`, which is a stream
-			  if (res.statusCode !== 200) {
-			    this.emit('error', new Error('Bad status code'));
-			  }
-			  else {
-			    stream.pipe(feedparser);
-			  }
-			});
-			feedparser.on('error', function (error) {
-				//TODO this isn't really "handling"! BUT it doesn't actually stop the app running
-				console.error(`error piping stream from ${feed.feed} - ${error}`);
-			});
-			feedparser.on('readable', function () {
-			  var stream = this;
-			  var meta = this.meta;
-			  var item;
-			  while (item = stream.read()) {
-					// only check items since the last time the bot ran.
-					if (item.date > (Date.now() - lastRun)){
-						var link = item.link;
-						var feedId = feed._id;
-						// then for each new article...
-						pocketfeeds.getListIds(link, feedId, function(error, result){
-							if (error) {
-								console.error(`error with ${link} = ${error}`)
-							} else {
-								console.log('sent ${link} with no errors: ' + result)
-							}
-						});
-					}
-			  }
-			});
-			feedparser.on('end', ()=> {
-				// done
-			});
-		});
-	});
-}
-
-setInterval(pocketfeeds.getFreshArticles, 7200000);
-// for testing
-// setInterval(pocketfeeds.getFreshArticles, 6000);
+// setInterval(pocketfeeds.getFreshArticles, 7200000);
+// for testing TODO CHANGE BACK!
+setInterval(pocketfeeds.getFreshArticles, 120000);

@@ -5,6 +5,15 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+    {{#if user}}
+    <header>
+      {{#if user.name}}
+        Hello {{user.name}} <a class="logout" href="/logout">Log Out</a>
+      {{else}}
+        Hello {{user.pocket_name}} <a class="logout" href="/logout">Log Out</a>
+      {{/if}}
+    </header>
+    {{/if}}
     <main class="main">
     {{{body}}}
   </main>

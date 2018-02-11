@@ -6,6 +6,15 @@
   --subtle: #c0c0c0;
 }
 
+header {
+  display: block;
+  background: var(--header-text-color);
+  margin: 0 -50px;
+  text-align: right;
+  color: #fff;
+  padding: 0.25em 1em;
+}
+
 html {
   margin:0;
   padding:0;
@@ -135,6 +144,12 @@ form .bugreport {
   padding: 0.25em 1em;
   color: var(--success);
   border: 2px solid var(--success);
+}
+
+.logout {
+  padding: 0 1em;
+  color: var(--subtle);
+  font-size: 80%;
 }
 
 .reportform {

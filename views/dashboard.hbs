@@ -1,5 +1,5 @@
 
-<h1>Welcome to Empocketer{{#if name}} {{name}}{{/if}}!</h1>
+<h1>Welcome to Empocketer{{#if user.name}} {{user.name}}{{/if}}!</h1>
 
 <p>Please add your name so other empocketers know who you are. It can be anything you like. This is your dashboard, where you can create and edit lists, see what you are subscribed to, and add or remove subscriptions.</p>
 <p>This is app is currently in Alpha and will <del>probably</del> definitely have bugs. Please report any problems using the <a href="/bugs">bug reporter</a>, or send a tweet/DM to <a href="https://twitter.com/hughrundle">@hughrundle</a>.
@@ -8,7 +8,7 @@
 
 <form action="/dashboard/addname" method="post">
 	<label for="name">Name: </label>
-	<input id="name" type="text" value="{{name}}" name="name">
+	<input id="name" type="text" value="{{user.name}}" name="name">
 	<input class="addNameButton" type="submit" value="Save Name">
 </form>
 
@@ -19,10 +19,10 @@
 </form>
 
 <h2>Lists</h2>
-
+<p>Click/tap on the list name to add feeds.</p>
 <ul class="listing">
 {{#each lists}}
-<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button></li>
+<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../user._id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button></li>
 {{/each}}
 </ul>
 

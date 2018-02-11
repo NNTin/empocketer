@@ -14,10 +14,10 @@ router.get('/',
     function getUser() {
       db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
         if (err) {return console.error('oh no, error! \n' + err)}
-        var id = doc._id, token = doc.pocket_token, name = doc.name;
-        db.lists.find({owner: id}).sort({name:1}).exec(function(err, docs) {
+        var user = doc;
+        db.lists.find({owner: user._id}).sort({name:1}).exec(function(err, lists) {
           try {
-            myRender(id, token, name, docs)
+            myRender(user, lists)
           } catch (err) {
             console.error(`error getting lists... \n ${err}`)
           }
@@ -25,13 +25,11 @@ router.get('/',
       })
     };
     // this is called by the getUser function so all the values are already retrieved
-    function myRender (id, token, name, lists) {
+    function myRender (user, lists) {
       res.render('dashboard', {
         appname: settings.APP_NAME,
     		title: settings.APP_NAME + ' - dashboard',
-        id: id,
-        token: token,
-        name: name,
+        user: user,
         lists: lists
       });
     };
