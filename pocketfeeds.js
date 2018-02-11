@@ -219,6 +219,6 @@ pocketfeeds.getFreshArticles = function() {
 	});
 } // end of getFreshArticles
 
-// setInterval(pocketfeeds.getFreshArticles, 7200000);
-// for testing TODO CHANGE BACK!
-setInterval(pocketfeeds.getFreshArticles, 120000);
+setInterval(pocketfeeds.getFreshArticles, 7200000);
+// for testing
+// setInterval(pocketfeeds.getFreshArticles, 120000);

@@ -134,16 +134,15 @@ form .bugreport {
 }
 
 .logInButton {
-  width: 100%;
   text-align: center;
-  padding: 2em;
+  padding: 1em;
+  border: 2px solid var(--success);
+  margin-bottom: 2em;
 }
 
 .logInButton a {
   font-size: 1.5em;
-  padding: 0.25em 1em;
   color: var(--success);
-  border: 2px solid var(--success);
 }
 
 .logout {
@@ -159,4 +158,26 @@ form .bugreport {
 .strikeout {
   color: var(--failure);
   text-decoration: line-through;
+}
+
+@media only screen and (max-width: 600px) {
+
+  body {
+    font-size: 160%;
+    margin: 0;
+    padding: 0 1em;
+  }
+
+  header {
+    margin: 0;
+  }
+
+  footer {
+    margin: -1em;
+    padding: 1em;
+  }
+
+  .logInButton {
+    /* margin: -50px; */
+  }
 }
