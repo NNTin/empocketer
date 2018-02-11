@@ -39,7 +39,6 @@ router.get('/',
 
 // delete a list
 router.get('/removelist/list:id', ensureLoggedIn('/'), function(req, res){
-
   var id = req.params.id;
   // this is called further down
   // if the user deletes a list that has feeds that only appear in that list, we should delete them to keep the database up to date and avoid making RSS calls uneccessarily.

@@ -16,7 +16,7 @@ router.get('/',
 });
 
 // remove feed and report back to page
-router.get('/removefeed/:list-:id', ensureLoggedIn('/'), function(req, res){
+router.get('/removefeed/feed:id', ensureLoggedIn('/'), function(req, res){
   var id = req.params.id;
   var listId = req.params.list;
   // get the feed, then remove this list from the feed's lists array

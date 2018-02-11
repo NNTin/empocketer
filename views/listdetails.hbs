@@ -12,7 +12,7 @@
 {{#each feeds}}
 {{!-- show the title, which links to the actual site
  TODO plus a 'list count' which links to a list of all the other lists that have include this feed. --}}
-<li name="{{../listid}}-{{_id}}"><a href="{{{url}}}" name="{{../listid}}-{{_id}}">{{title}}</a><span class="list-count"><a href="">{{lists.length}}</a></span><button type="remove" class="removeButton" id="{{../listid}}-{{_id}}">remove</button></li>
+<li name="feed{{_id}}"><a href="{{{url}}}" name="feed{{_id}}">{{title}}</a><span class="list-count"><a href="">{{lists.length}}</a></span><button type="remove" class="removeButton" id="feed{{_id}}">remove</button></li>
 {{/each}}
 </ul>
 
