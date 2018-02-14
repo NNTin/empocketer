@@ -48,13 +48,18 @@ input[type="text"] {
 
 label {
     display: block;
-    margin: 1em;
+    margin: 1em 0 1em;
     font-style: italic;
 }
 
 main {
   display: block;
   min-height: 70vh;
+  margin-bottom: 4em;
+}
+
+textarea {
+  border: 1px solid var(--subtle);
 }
 
 footer {
@@ -72,7 +77,8 @@ footer a {
 
 .addNameButton,
 .addListButton,
-.addFeedButton {
+.addFeedButton,
+.sendBug {
   padding: 0.25em 1em;
   color: var(--success);
   border: 2px solid var(--success);
@@ -160,16 +166,16 @@ form .bugreport {
   text-decoration: line-through;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-device-width: 700px), (max-width: 700px) {
 
   body {
-    font-size: 160%;
+    font-size: 400%;
     margin: 0;
     padding: 0 1em;
   }
 
   header {
-    margin: 0;
+    margin: 0 -1em;
   }
 
   footer {
@@ -177,7 +183,15 @@ form .bugreport {
     padding: 1em;
   }
 
-  .logInButton {
-    /* margin: -50px; */
+  .addNameButton,
+  .addListButton,
+  .addFeedButton,
+  .delList,
+  .removeButton,
+  .confirm,
+  .sendBug   {
+    margin-top: 0.5em;
+    font-size: 0.8em;
   }
+
 }
