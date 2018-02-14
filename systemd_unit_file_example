@@ -1,0 +1,15 @@
+[Unit]
+Description=Empocketer - an express app to push RSS into Pocket
+Documentation=https://github.com/hughrun/empocketer
+After=network.target
+
+[Service]
+Environment=NODE_PORT=3999
+Type=simple
+User=linuxusername  
+ExecStart=/usr/bin/node /var/www/empocketer/.bin/www
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
