@@ -35,8 +35,10 @@ function cancelDeletion(cancel, id){
 }
 
 function getDelButton(id){
-	var delButton = document.querySelector('.confirm');
-	var cancelButton = document.querySelector('.undelete');
+	// get the button that triggered the deletion action
+	var delButton = document.getElementById(id);
+	// get the cancel button for that element
+	var cancelButton = delButton.nextSibling.nextSibling;
 
 	function confirm(event){
 		// now check the feed and delete the listing once confirmed

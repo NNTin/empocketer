@@ -36,8 +36,10 @@ function cancelDeletion(cancel, id){
 
 // listen for delete confirmation
 function getDelButton(id){
-	var delButton = document.querySelector('.confirm');
-	var cancelButton = document.querySelector('.undelete');
+	// get the button that triggered the deletion action
+	var delButton = document.getElementById(id);
+	// get the cancel button for that element
+	var cancelButton = delButton.nextSibling.nextSibling;
 
 	function confirm(event) {
 			// now check the list and delete the listing once confirmed
@@ -72,7 +74,7 @@ for (i = 0; i < removeButton.length; i++){
 		// remove the hint if there is one
 		var hint = document.getElementsByClassName("hint")[0];
 		if (hint) {
-			hint.style.display = "none";
+			hint.parentNode.removeChild(hint);
 		}
 
 		// add an undelete button
