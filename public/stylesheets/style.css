@@ -95,7 +95,8 @@ footer a {
 }
 
 .delList,
-.removeButton {
+.removeButton,
+.undelete {
   padding: 0.25em 1em;
   color: var(--failure);
   border: 2px solid var(--failure);
@@ -177,6 +178,10 @@ form .bugreport {
   text-decoration: line-through;
 }
 
+.undelete {
+  font-size: 0.8em;
+}
+
 @media only screen and (max-device-width: 700px) {
 
   body {
@@ -200,7 +205,8 @@ form .bugreport {
   .delList,
   .removeButton,
   .confirm,
-  .sendBug   {
+  .sendBug,
+  .undelete   {
     margin-top: 0.5em;
     font-size: 0.8em;
   }
