@@ -22,7 +22,7 @@ function removeList(id){
 }
 
 // cancel deletion
-function cancelDeletion(cancel, id, fc){
+function cancelDeletion(cancel, id){
 	var title = document.querySelector(`a[name=${id}]`);
 	var button = document.getElementById(id);
 	// remove cancel button completely
@@ -45,11 +45,9 @@ function getDelButton(id){
 		}
 
 	function cancel(event) {
-			// we need to remove the confirm eventListener, otherwise the next delete click will be treated as a confirm.
-			delButton.removeEventListener('click', confirm);
-			// cancelButton.removeEventListener('click', cancel);
-			// cancelButton.addEventListener('click', cancel);
-			cancelDeletion(event.target, id, cancel)
+		// we need to remove the confirm eventListener, otherwise the next delete click will be treated as a confirm.
+		delButton.removeEventListener('click', confirm);
+		cancelDeletion(event.target, id)
 	}
 
 	delButton.addEventListener('click', confirm);
