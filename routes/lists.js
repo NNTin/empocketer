@@ -122,12 +122,17 @@ router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
       if (err) {
         return console.error(err) //TODO something more useful to handle owner errors
       } else {
-        renderList(owner, list, name, feeds)
+        // if there is only one feed, the user has *probably* only just started adding them. Show a hint that they will get the next post in their Pocket account.
+        if (feeds.length > 1) {
+          renderList(owner, list, name, feeds, false)
+        } else {
+          renderList(owner, list, name, feeds, true)
+        }
       }
     })
   }
 
-  function renderList(owner, list, name, feeds){
+  function renderList(owner, list, name, feeds, firstFeed){
     // get user details
   	if (req.session && req.session.passport && req.session.passport.user) {
   		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
@@ -146,7 +151,8 @@ router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
         owner: owner,
         name: name,
         feeds:feeds,
-        user: user
+        user: user,
+        firstfeed: firstFeed
       })
     }
   };

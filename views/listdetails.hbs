@@ -6,12 +6,12 @@
 	<input id="url" type="text" name="url">
 	<input class="addFeedButton" type="submit" value="Add Feed">
 </form>
-
-<ul class="listing">
+<ul id="feedList" class="listing">
 {{#each feeds}}
 {{!-- show the title, which links to the actual site
  TODO plus a 'list count' which links to a list of all the other lists that have include this feed. --}}
-<li name="feed{{_id}}"><a href="{{{url}}}" name="feed{{_id}}">{{title}}</a><span class="list-count"><a href="">{{lists.length}}</a></span><button type="remove" class="removeButton" id="feed{{_id}}">remove</button></li>
+<li name="feed{{_id}}"><a href="{{{url}}}" name="feed{{_id}}">{{title}}</a><span class="list-count"><a href="">{{lists.length}}</a></span><button type="remove" class="removeButton" id="feed{{_id}}">remove</button>
+	{{#if ../firstfeed}}<span class="hint">The next post will appear in your Pocket account!</span>{{/if}}</li>
 {{/each}}
 </ul>
 

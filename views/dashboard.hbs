@@ -9,22 +9,26 @@
 <form action="/dashboard/addname" method="post">
 	<label for="name">Name: </label>
 	<input id="name" type="text" value="{{user.name}}" name="name">
-	<input class="addNameButton" type="submit" value="Save Name">
+	<input id="addNameButton" type="submit" value="Save Name">
+	{{#unless user.name}}<span class="hint">Start by telling us who you are!</span>{{/unless}}
 </form>
 
 <form action="/dashboard/addlist" method="post">
 	<label for="list">New List: </label>
 	<input id="list" type="text" name="list">
-	<input class="addListButton" type="submit" value="Save List">
+	<input id="addListButton" type="submit" value="Save List">
+	{{#unless lists}}<span class="hint">Create a name for your first list</span>{{/unless}}
 </form>
 
 <h2>Lists</h2>
-<p>Click/tap on the list name to add feeds.</p>
-<ul class="listing">
+<ul id="listsList" class="listing">
 {{#each lists}}
-<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../user._id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button></li>
+<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../user._id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button>
+{{#if @first}}{{#if ../lists}}{{#unless ../feeds}}
+<span class="hint">click or tap on the list name to add feeds</span>
+{{/unless}}{{/if}}{{/if}}
+</li>
 {{/each}}
 </ul>
-
 {{!-- this needs to go under the body because we're looking for elements in the dom --}}
 <script src='/javascripts/dash_scripts.js'></script>

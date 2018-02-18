@@ -17,20 +17,64 @@ router.get('/',
         var user = doc;
         db.lists.find({owner: user._id}).sort({name:1}).exec(function(err, lists) {
           try {
-            myRender(user, lists)
+            getFeeds(user, lists)
           } catch (err) {
             console.error(`error getting lists... \n ${err}`)
           }
         })
       })
     };
+
+    // called by getUser, here we're checking whether there are any feeds in the user lists
+    // this is so we can make onboarding easier by showing a hint if the user hasn't added any feeds yet.
+    function getFeeds(user, lists) {
+      // we use Promises and async/await because otherwise the function will return before we have time to check the database and loop through the lists.
+
+      // the Promise comes from checking the database
+      function checkFeeds(list) {
+        return new Promise((resolve, reject) => {
+          db.feeds.findOne({lists: list._id}, function(err, doc){
+            if (err) {
+              reject(console.error(err))
+            } else if (doc) {
+              resolve(true)
+            } else {
+              resolve(false)
+            }
+          })
+        })
+      };
+
+      // loop through each list, and await the DB check
+      async function checkLists(lists) {
+        for (const list of lists) {
+          var hasFeed = await checkFeeds(list);
+          if (hasFeed) {
+            return true
+            break;
+          } // else just don't do anything
+        }
+      }
+
+      // await the loop so it has a chance to finish running before rending the page
+      async function waitForFeeds(){
+        let feeds = await checkLists(lists);
+        // if there are any feeds for this user, checkLists will return true and then break the loop;
+        // if there are no feeds, checkists returns nothing, so feeds will be undefined (i.e. falsy)
+        myRender(user, lists, feeds)
+      }
+      // here's the trigger to start everything
+      waitForFeeds();
+    }
+
     // this is called by the getUser function so all the values are already retrieved
-    function myRender (user, lists) {
+    function myRender (user, lists, feeds) {
       res.render('dashboard', {
         appname: settings.APP_NAME,
     		title: settings.APP_NAME + ' - dashboard',
         user: user,
-        lists: lists
+        lists: lists,
+        feeds: feeds
       });
     };
     // get user data

@@ -21,6 +21,7 @@ function removeList(id){
 	req.send();
 }
 
+// listen for delete confirmation
 function getDelButton(id){
 	var delButton = document.querySelector('.confirm');
 	delButton.addEventListener('click', function(event){
@@ -29,6 +30,8 @@ function getDelButton(id){
 	})
 }
 
+// change delete button to a confirm button
+// TODO create cancel button
 var removeButton = document.getElementsByClassName('delList');
 for (i = 0; i < removeButton.length; i++){
 	removeButton[i].addEventListener('click', function(event){

@@ -75,8 +75,8 @@ footer a {
 }
 /* CLASSES */
 
-.addNameButton,
-.addListButton,
+#addNameButton,
+#addListButton,
 .addFeedButton,
 .sendBug {
   padding: 0.25em 1em;
@@ -114,6 +114,17 @@ footer a {
 
 form .bugreport {
   width: 100%;
+}
+
+.hint {
+  border: 2px solid var(--warning);
+  padding: 0.5em;
+  margin-left: 2em;
+  text-align: center;
+  font-size: 0.8em;
+  max-width: 10em;
+  display: inline-block;
+  box-shadow: 5px 5px 5px var(--subtle);
 }
 
 .list-count {
@@ -166,7 +177,7 @@ form .bugreport {
   text-decoration: line-through;
 }
 
-@media only screen and (max-device-width: 700px), (max-width: 700px) {
+@media only screen and (max-device-width: 700px) {
 
   body {
     font-size: 400%;
@@ -183,8 +194,8 @@ form .bugreport {
     padding: 1em;
   }
 
-  .addNameButton,
-  .addListButton,
+  #addNameButton,
+  #addListButton,
   .addFeedButton,
   .delList,
   .removeButton,
