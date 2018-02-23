@@ -19,10 +19,10 @@
   </main>
     <footer class="footer">
       <a href="/">Home</a><br>
-      <a href="/dashboard">Dashboard</a><br>
-      <a href="/bugs">Report a bug</a><br>
+      {{#if user}}<a href="/dashboard">Dashboard</a><br>
+      <a href="/bugs">Report a bug</a><br>{{/if}}
       <a href="/todos">What's coming</a><br>
-      <a href="/logout">Log Out</a><br>
+      {{#if user}}<a href="/logout">Log Out</a><br>{{/if}}
       <div class="credits">
         <p><strong>{{appname}}</strong> is made by <a href="https://hughrundle.net">Hugh Rundle</a><p>
         <p>This app is not affiliated with or endorsed by Pocket or Mozilla.</p>
