@@ -35,12 +35,13 @@ pocketfeeds.checkUrl = function(link, callback) {
 				// elem may be null or not have any child nodes if there is no feed at all so we need to call an error
 				if (!elem[0] || !elem) {
 					return callback('NOFEED', null)
+					// TODO sometiems there *is* a feed but it's not listed in the headers. Is there another way to try to find it before giving up?
 				} else {
 					// some subpages (e.g. abc.net.au/news) use relative URLs, which are a PITA.
-					// Ini this case we reconstruct the feed from the canonical root URL rather than make users do it.
+					// In this case we reconstruct the feed from the canonical root URL rather than make users do it.
 					if (elem[0].attribs.href.substring(0,4) != 'http') {
 						// check whether the feed uses http or https
-						// we use the 'private' field _headers here (instead of headers) but tbh I'm not sure why. This may no longer be necessary, need to check recent node and Express docs.
+						// TODO we use the 'private' field _headers here (instead of headers) but tbh I'm not sure why. This may no longer be necessary, need to check recent node and Express docs.
 						if (response.req._headers.protocol) {
 								feed = response.req._headers.protocol + '//' + response.req._headers.host + elem[0].attribs.href;
 						} else {
@@ -55,13 +56,17 @@ pocketfeeds.checkUrl = function(link, callback) {
 							title = link;
 						}
 				  } else {
+						// the first bit of the string is http so we're all good
 						feed = elem[0].attribs.href;
+						// check the title here too
+						// TODO we can probably move this down and keep the code DRY
 						if (titleElem[0].children[0].data) {
 							title = titleElem[0].children[0].data;
 						} else {
 							title = link;
 						}
 				  }
+					// TODO put the code for checking the title here
 				}
 			return callback(err, {feed: feed, title: title});
 		} catch (error) {
@@ -181,7 +186,8 @@ pocketfeeds.getFreshArticles = function() {
 				  var item;
 				  while (item = stream.read()) {
 						// only check items published since the last time the bot ran.
-						if (item.date > lastRun){
+						// we use pubdate (original publication time) instead of date (last update time) because YouTube appears to show the last updated time as more or less the current time.
+						if (item.pubdate > lastRun){
 							var link = item.link;
 							var feedId = feed._id;
 							// then for each new article...
