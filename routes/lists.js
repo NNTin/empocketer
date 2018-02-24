@@ -75,10 +75,11 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
 			renderPage(doc)
 		});
   } else {
-    renderPage()
+    renderPage(req.params.userId)
   }
   function renderPage(user){
     res.render('feed-error', {
+      user: user,
       appname: settings.APP_NAME,
   		title: settings.APP_NAME + ' - error with feed',
       error: error,
