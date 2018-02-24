@@ -70,9 +70,52 @@ pocketfeeds.checkUrl = function(link, callback) {
 				}
 			return callback(err, {feed: feed, title: title});
 		} catch (error) {
-			return callback(error, null)
+			// this error will be thrown if the URL doesn't exist
+			if (error.message === "Cannot read property 'parent' of undefined") {
+				return callback('NOSITE', null);
+			} else {
+				return callback(error, null)
+			}
 		}
 	});
+}
+
+// GET TITLE AND URL WHEN YOU ALREADY HAVE THE FEED
+
+pocketfeeds.checkFeed = function(feed, callback) {
+	// use feedparser to get meta.title and meta.link
+	var req = request(feed)
+	var feedparser = new FeedParser();
+
+	try {
+		req.on('error', function (error) {
+			return callback('NOFEED', null)
+		});
+
+		req.on('response', function (res) {
+			var stream = this; // `this` is `req`, which is a stream
+
+			if (res.statusCode !== 200) {
+				return callback('NOSITE', null);
+			}
+			else {
+				stream.pipe(feedparser);
+			}
+		});
+
+		feedparser.on('error', function (error) {
+			return callback(error, null);
+		});
+
+		feedparser.on('readable', function () {
+			var stream = this;
+			var meta = this.meta;
+				// get meta and add feed to DB
+				return callback(null, {title: meta.title, url: meta.link})
+		});
+	} catch (err) {
+		return callback(err, null);
+	}
 }
 
 //*********************************

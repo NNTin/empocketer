@@ -60,7 +60,7 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
     error = "this site is already on your list!";
     exists = false;
   } else if (req.params.err === "NOFEED") {
-    error = "the site does not appear to have an RSS or Atom feed.";
+    error = "the site does not have an RSS or Atom feed listed in the HEAD.";
     exists = true;
   } else if (req.params.err === "NOSITE") {
     error = "that URL does not appear to exist. Please check the URL and try again.";
@@ -83,7 +83,9 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
   		title: settings.APP_NAME + ' - error with feed',
       error: error,
       exists: exists,
-      link: `/lists/${req.params.userId}/${req.params.listId}`
+      link: `/lists/${req.params.userId}/${req.params.listId}`,
+      owner: req.params.userId,
+      list: req.params.listId
     });
   }
 });
@@ -190,6 +192,7 @@ router.post('/:userId/:listId/addfeed', ensureLoggedIn('/'), function(req, res){
             console.log(`added feed: ${doc._id}`)
           }
           // now add the list to the lists array if it is not already there
+          // we have to do this because we can't '$addToSet' inside '$set'
           db.feeds.update({feed:feed}, {$addToSet: {lists: list}}, {upsert: true}, function(err, num, doc){
             if (err) {
               return res.redirect(`/lists/${userId}/${list}/error/${err}`)
@@ -200,6 +203,35 @@ router.post('/:userId/:listId/addfeed', ensureLoggedIn('/'), function(req, res){
       });
     }
   });
+});
+
+// for adding feed directly from the error page
+router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(req, res){
+  var user = req.params.ownerid;
+  var list = req.params.listid;
+  var feed = req.body.url;
+
+  pocketfeeds.checkFeed(feed, function(err, data) {
+    if (err) {
+      console.error(err)
+      // send to error page
+      return res.redirect(`/lists/${user}/${list}/error/${err}`);
+    } else {
+      // update the DB
+      db.feeds.update({feed:feed}, {$set: {feed: feed, url: data.url, title: data.title}}, {upsert: true}, function(err, num, doc){
+        if (err) {
+          return res.redirect(`/lists/${user}/${list}/error/${err}`);
+        } else {
+          db.feeds.update({feed:feed}, {$addToSet: {lists: list}}, {upsert: true}, function(err, num, doc){
+            if (err) {
+              return res.redirect(`/lists/${user}/${list}/error/${err}`)
+            }
+            return res.redirect(`/lists/${user}/${list}`);
+          });
+        }
+      });
+    }
+  })
 });
 
 module.exports = router;

@@ -31,6 +31,12 @@ a {
   text-decoration: none;
 }
 
+code {
+  font-family: 'Courier New', monospace;
+  color: var(--failure);
+  font-weight: bold;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--header-text-color);
 }
@@ -173,6 +179,10 @@ form .bugreport {
   margin-bottom: 4em;
 }
 
+.site {
+  font-family: 'Courier New', monospace;
+  background-color: var(--subtle);
+}
 .strikeout {
   color: var(--failure);
   text-decoration: line-through;

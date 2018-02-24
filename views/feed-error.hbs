@@ -3,17 +3,32 @@
 <p>Sorry, that site couldn't be added because {{error}}</p>
 
 {{#if exists}}
-	<p>If you know the RSS or Atom URL, you can try adding it using the form below. See the list below for tips finding the feed URL manually.</p>
-	<section class="find-feed-tips">
-		<h2>Wordpress</h2>
-		<p>Wordpress feeds usually can be found at http://mysite.wordpress.com/rss.</p>
-	</section>
-	<hr/>
-	<form action="/lists/{{ownerid}}/{{listid}}/addfeeddirectly" method="post">
-		<label for="url">New Feed: </label>
-		<input id="url" type="text" name="url">
-		<input type="submit" value="Add Feed Directly">
+	<p>If you're sure the site has a feed, and you know the RSS or Atom URL, you can try adding it using the form below.</p>
+	<hr />
+	<form action="/lists/{{owner}}/{{list}}/addfeeddirectly" method="post">
+		<label for="url">Add Feed directly: </label>
+		<input id="url" type="url" size="40" name="url">
+		<input class="addFeedButton" type="submit" value="Add It!">
 	</form>
+	<br>
+	<hr />
+	<section class="find-feed-tips">
+		<h2>How to find the feed</h2>
+		<h3>Wordpress and Ghost</h3>
+		<p>Wordpress and Ghost feeds usually can be found at <span class="site">http://<code>mysite</code>.wordpress.com/rss</span>.</p>
+		<h3>Jekyll and GitHub Pages</h3>
+		<p>This can be tricky because the root URL in your browser may not match the root URL of the feed.</p>
+		<p>Try to find the username of the author and use <span class="site">http://<code>username</code>.github.io/feed.xml</span></p>
+		<h3>Medium</h3>
+		<p>If your URL is in the form <span class="site">https://medium.com/<code>@username</code></span></p>
+		<p>The feed URL will be <span class="site">https://medium.com/feed/<code>@username</code></span></p>
+		<h3>YouTube</h3>
+		<p>If your channel URL looks like this: <span class="site">https://www.youtube.com/channel/<code>abcd123</code></span></p>
+		<p>The feed looks like this: <span class="site">https://www.youtube.com/feeds/videos.xml?channel_id=<code>abcd123</code></span></p>
+		<h3>Blogger/Blogspot</h3>
+		<p>For a Blogger site with URL <span class="site">http://<code>my-name</code>.blogspot.com.au</span>,</p>
+		<p>try <span class="site">http://<code>my-name</code>.blogspot.com/feeds/posts/default?alt=rss</span>.</p> <p>NOTE: Blogger may add a country code to the URL (e.g. <span class="site">.au</span>) - you should <em>remove</em> this from the base url and just use <span class="site">blogspot.com</span</p>
+	</section>
 {{/if}}
 
 <a href="{{link}}">Go back to the list</a>
