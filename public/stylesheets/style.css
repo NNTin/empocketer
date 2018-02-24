@@ -161,7 +161,9 @@ form .bugreport {
   text-align: center;
   padding: 1em;
   border: 2px solid var(--success);
-  margin-bottom: 2em;
+  margin: 0 auto 2em;
+  width: 33%;
+
 }
 
 .logInButton a {
