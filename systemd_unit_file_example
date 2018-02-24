@@ -4,9 +4,9 @@ Documentation=https://github.com/hughrun/empocketer
 After=network.target
 
 [Service]
-Environment=NODE_PORT=3999
+Environment=NODE_PORT=3000
 Type=simple
-User=linuxusername  
+User=linuxusername
 ExecStart=/usr/bin/node /var/www/empocketer/.bin/www
 Restart=on-failure
 
