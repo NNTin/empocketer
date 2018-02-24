@@ -16,7 +16,7 @@ router.get('/',
 });
 
 // remove feed and report back to page
-router.get('/removefeed/feed:id', ensureLoggedIn('/'), function(req, res){
+router.get('/removefeed/list:list-:id', ensureLoggedIn('/'), function(req, res){
   var id = req.params.id;
   var listId = req.params.list;
   // get the feed, then remove this list from the feed's lists array
@@ -39,7 +39,7 @@ router.get('/removefeed/feed:id', ensureLoggedIn('/'), function(req, res){
       try {
         // pull the listId from the lists array
         db.feeds.update({_id: id}, {$pull:{lists: listId}}, {}, function(err, num){
-          console.log(`popped ${num} lists from the array in ${id}`)
+          console.log(`pulled ${num} lists from the array in ${id}`)
           // send result
           res.json({result: 'success'});
         })
@@ -61,11 +61,11 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
     exists = false;
   } else if (req.params.err === "NOFEED") {
     error = "the site does not appear to have an RSS or Atom feed.";
-    exists = false;
-  } else if(req.params.err === "RELURL") {
-    error = "there is a problem with the way the RSS feed is listed in the site's markup.";
     exists = true;
-  } else {
+  } else if (req.params.err === "NOSITE") {
+    error = "that URL does not appear to exist. Please check the URL and try again.";
+    exists = false;
+  }else {
     error = req.params.err;
   }
   // get user details
@@ -184,6 +184,8 @@ router.post('/:userId/:listId/addfeed', ensureLoggedIn('/'), function(req, res){
         } else {
           if (doc == undefined){
             // it was already in the DB, but maybe not in this list
+            // TODO check if the feed is already in this list, and throw an error.
+            // at the moment it simply reloads the page but there is no UI indication why basically nothing happened.
           } else {
             console.log(`added feed: ${doc._id}`)
           }
