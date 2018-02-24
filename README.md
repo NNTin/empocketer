@@ -26,7 +26,6 @@ If you want to run it on a server (i.e. not to just test on your own machine) yo
 * add ability to see all lists that subscribe to a particular sites
 * add ability to set lists as 'public' so other users can subscribe and see who the owner is
 * add ability to delete account (will need to remove user id from all subscriptions, QUESTION: what happens to lists the user created that are subscribed to by other people?)
-* better error handling and UI tips for adding URLS and lists
 * Create lists via OPML upload
 * general styling and design improvements
 * more complete installation instructions including hosting config
