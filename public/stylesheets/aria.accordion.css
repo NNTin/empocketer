@@ -1,0 +1,117 @@
+/* From Scott O'Hara
+https://github.com/scottaohara/accessible_accordions
+Gratefully used under MIT license  */
+
+/**
+ * Accordion container element
+ */
+.accordion {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.accordion > li {
+	margin: 0;
+}
+
+/**
+ * Add zero-width space. needed to ensure Safari + VO respect list semantics.
+ * Set the before content to position absolute to negate any visible space
+ * the before content could add to the document.
+ */
+.accordion > li:before {
+	content: "\200B";
+	position: absolute;
+}
+
+/**
+ * Accordion Heading
+ */
+.js .accordion__heading {
+	border: 1px solid var(--subtle);
+	font-size: inherit;
+	margin: -1px 0 0;
+}
+
+.js .accordion__trigger {
+	-webkit-appearance: none;
+		background-color: var(--header-text-color);
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	color: #fff;
+	cursor: pointer;
+	display: block;
+	font-size: inherit;
+	padding: .5em 1em;
+	position: relative;
+	text-align: left;
+	width: 100%;
+	z-index: 2;
+}
+
+/**
+ * This is needed to allow a double tap iOS 11
+ * Safari + VO to function correctly, if there
+ * are multiple elements (wrapper spans) to layout
+ * text nodes within the accordion button.
+
+	-- This is not needed if a button only contains text
+	   and no other child nodes wrapping the text --
+
+.accordion__trigger > * {
+	pointer-events: none;
+}
+ */
+
+.js .accordion__trigger:hover,
+.js .accordion__trigger:focus {
+	background-color: var(--success);
+	color: #fff;
+	outline: none;
+}
+
+.js .accordion__trigger:focus {
+	box-shadow: inset 0 0 0 2px #1e82d1;
+}
+
+.accordion__trigger[aria-disabled="true"]:hover {
+	background-color: #1b75bc;
+	color: #fff;
+	cursor: not-allowed;
+}
+
+.accordion__trigger[aria-disabled="true"]:focus {
+	background-color: #0a2a42;
+}
+
+.js .accordion__panel {
+	background-color: inherit;
+	max-height: 0vh;
+	overflow: hidden;
+	padding: .05em 1.25em;
+	position: relative;
+	visibility: hidden;
+	z-index: 1;
+}
+
+.js .accordion__panel {
+	margin-top: -.1em;
+}
+
+.js .accordion__panel > :last-child {
+	margin-bottom: 0;
+}
+
+.js .accordion__panel[aria-hidden="false"] {
+	max-height: 100vh;
+	overflow: auto;
+	padding: 1.25em;
+	visibility: visible;
+}
+
+.accordion__trigger[aria-expanded="true"] {
+	background: var(--subtle);
+	color: #000;
+}

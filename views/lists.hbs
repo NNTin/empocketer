@@ -1,0 +1,27 @@
+<h1>Lists</h1>
+<p>Select a list for more information, or to add it to your subscriptions.</p>
+<hr />
+
+{{!-- Drop down lists for each list. Thanks to Scott O'Hara for sharing his accessible_accordians code at https://github.com/scottaohara/accessible_accordions --}}
+<div class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
+	{{#each lists}}
+  <h3 class="accordion__heading">
+    {{name}} ({{subscribers.length}} subscribed) -- {{ownerName}}
+  </h3>
+  <div class="accordion__panel">
+    <ul>
+			{{#if feeds}}
+      {{#each feeds}}
+				<li><a href="{{url}}">{{title}}</a></li>
+			{{/each}}
+			{{else}}
+			This list is currently empty
+			{{/if}}
+    </ul>
+  </div>
+	{{/each}}
+</div>
+{{!-- script to run accordion --}}
+<script src='/javascripts/aria.accordion.min.js'></script>
+{{!-- script to get list info --}}
+<script src='/javascripts/lists_scripts.js'></script>

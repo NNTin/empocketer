@@ -8,12 +8,115 @@ var settings = require('../settings');
 var pocketfeeds = require('../pocketfeeds');
 var db = require('../nedb.js');
 
-/* GET users listing. */
-router.get('/',
-  ensureLoggedIn('/'),
-  function(req, res, next) {
-  res.send('this will be the lists page');
-});
+// get logged in user
+// wrap the DB call up in a promise
+function getUser(pUser) {
+  if (pUser) {
+    return new Promise((resolve, reject) => {
+      db.users.findOne({pocket_name: pUser}, function(err, doc){
+        if (err) {
+          console.error('error finding user in lists.js line 14 \n' + err);
+          reject(console.error(`error \n err`));
+        } else if (!doc) {
+          reject(console.error('cannot find user \n ' + err))
+        } else {
+          resolve(doc);
+        }
+      });
+    });
+  } else {
+    reject(console.log(`error`))
+  }
+};
+
+/* GET list of lists. */
+router.get('/', ensureLoggedIn('/'), function(req, res, next) {
+
+  // wrap the DB call up in a promise
+  function getLists() {
+    return new Promise((resolve, reject) => {
+      //TODO once finished testing, restrict this to public: true
+      db.lists.find({}).sort({name: 1, subscribers: -1}).exec(function(err, docs) {
+        try {
+          // resolve promise with the updated docs array after the for..of is done
+          resolve(docs);
+        } catch (err) {
+          reject(console.log(`error getting lists with getAllLists\n${err}`));
+        }
+      })
+    })
+  } // end getLists
+
+  // wrap the DB call up in a promise
+  function addFeeds(list){
+    return new Promise((resolve, reject) => {
+      db.feeds.find({lists: list._id}, function (err, feeds) {
+        try {
+          // simple assignment here will update docs
+          list.feeds = feeds;
+          resolve(list)
+        } catch (err) {
+          reject(console.error(`error finding feeds in getAllLists\n${err}`))
+        }
+      })
+    })
+  }
+
+  async function updateLists() {
+    // get each list and add the feeds
+    // use for..of here, not forEach
+    // see https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop?rq=1
+      const lists = await getLists();
+      for (let list of lists) {
+        const newList = await addFeeds(list)
+        list = newList;
+      }
+      return lists;
+  } // end addFeeds
+
+  // wrap the DB call up in a promise
+  async function attachOwner(list) {
+    return new Promise((resolve, reject) => {
+      // get the user with this ID
+      db.users.findOne({_id: list.owner}, function(err, user){
+        try {
+          //add their name as ownerName
+          list.ownerName = user.name;
+          resolve(list)
+        } catch (e) {
+          reject(e);
+        }
+      })
+    })
+  } // end attachOwner
+
+  // this takes the updated lists array as input, attaches a name for each owner id, and returns the new array
+  async function attachOwners(){
+    let ls = await updateLists();
+    for (let list of ls) {
+      const listWithName = await attachOwner(list);
+      list = listWithName;
+    }
+    return ls;
+  }
+
+  // use final async function to render the page once all the data is ready
+  async function renderLists(pUser) {
+    let user = await getUser(pUser); // get username for header
+    let lists = await attachOwners(); // updated lists once they're ready
+    // wrap up both promises in a new one and once it's ready, render page;
+    Promise.all([user, lists]).then(function(vals){
+      res.render('lists', {
+        user: vals[0], //vals[0] is the result of the user promise
+        appname: settings.APP_NAME,
+        title: settings.APP_NAME + ' - lists',
+        lists: vals[1] // vals[1] is the result of the lists promise
+      });
+    })
+  }
+  // kick it all off
+  renderLists(req.session.passport.user)
+})
 
 // remove feed and report back to page
 router.get('/removefeed/list:list-:id', ensureLoggedIn('/'), function(req, res){
