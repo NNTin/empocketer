@@ -5,6 +5,9 @@ var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn; // might ha
 var settings = require('../settings');
 //DB
 var db = require('../nedb.js')
+// requrie local files
+var getlists = require('../getlists');
+// var pocketfeeds = require('../pocketfeeds');
 
 /* render the dashboard if logged in, or render the index/homepage if not logged in. */
 router.get('/',
@@ -12,16 +15,11 @@ router.get('/',
   //get the passport session user (Pocket username) and use it to find the logged in user from the database
   function(req, res, next) {
     function getUser() {
-      db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
+      db.users.findOne({pocket_name: req.session.passport.user}, async function(err, doc){
         if (err) {return console.error('oh no, error! \n' + err)}
         var user = doc;
-        db.lists.find({owner: user._id}).sort({name:1}).exec(function(err, lists) {
-          try {
-            getFeeds(user, lists)
-          } catch (err) {
-            console.error(`error getting lists... \n ${err}`)
-          }
-        })
+        const lists = await getlists.byname({owner: user._id});
+        getFeeds(user, lists)
       })
     };
 
@@ -59,22 +57,26 @@ router.get('/',
       // await the loop so it has a chance to finish running before rending the page
       async function waitForFeeds(){
         let feeds = await checkLists(lists);
+        let subscriptions = await getlists.byname({$not: {owner: user._id}, subscribers: user._id})
+        console.log(`user id is ${user._id}`)
         // if there are any feeds for this user, checkLists will return true and then break the loop;
         // if there are no feeds, checkists returns nothing, so feeds will be undefined (i.e. falsy)
-        myRender(user, lists, feeds)
+        myRender(user, lists, feeds, subscriptions)
       }
       // here's the trigger to start everything
       waitForFeeds();
     }
 
     // this is called by the getUser function so all the values are already retrieved
-    function myRender (user, lists, feeds) {
+    function myRender (user, lists, feeds, subscriptions) {
+
       res.render('dashboard', {
         appname: settings.APP_NAME,
     		title: settings.APP_NAME + ' - dashboard',
         user: user,
         lists: lists,
-        feeds: feeds
+        feeds: feeds,
+        subscriptions: subscriptions
       });
     };
     // get user data

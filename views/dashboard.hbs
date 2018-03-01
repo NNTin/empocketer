@@ -1,8 +1,7 @@
-
 <h1>Welcome to Empocketer{{#if user.name}} {{user.name}}{{/if}}!</h1>
 
 <p>Please add your name so other empocketers know who you are. It can be anything you like. This is your dashboard, where you can create and edit lists, see what you are subscribed to, and add or remove subscriptions.</p>
-<p>This is app is currently in Alpha and will <del>probably</del> definitely have bugs. Please report any problems using the <a href="/bugs">bug reporter</a>, or send a tweet/DM to <a href="https://twitter.com/hughrundle">@hughrundle</a>.
+<p>This app is currently in Alpha and will <del>probably</del> definitely have bugs. Please report any problems using the <a href="/bugs">bug reporter</a>, or send a tweet/DM to <a href="https://twitter.com/hughrundle">@hughrundle</a>.
 
 <hr/>
 
@@ -20,15 +19,34 @@
 	{{#unless lists}}<span class="hint">Create a name for your first list</span>{{/unless}}
 </form>
 
-<h2>Lists</h2>
-<ul id="listsList" class="listing">
+<div class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
+<h2>Your Lists</h2>
 {{#each lists}}
-<li name="list{{_id}}"><a name="list{{_id}}" href="/lists/{{../user._id}}/{{_id}}">{{name}}</a><button class="delList" id="list{{_id}}">delete</button>
-{{#if @first}}{{#if ../lists}}{{#unless ../feeds}}
-<span class="hint">click or tap on the list name to add feeds</span>
-{{/unless}}{{/if}}{{/if}}
-</li>
+	<h3 class="accordion__heading">
+		{{name}} | feeds: {{feeds.length}} | subs: {{subscribers.length}}
+	</h3>
+  <div class="accordion__panel">
+		<button class="delList" id="list{{_id}}">delete</button>
+		{{#each feeds}}
+		<li><a href="{{url}}">{{title}}</a></li>
+		{{/each}}
+	</div>
+	{{#if @first}}{{#if ../lists}}{{#unless ../feeds}}
+	<span class="hint">click or tap on the list name to add feeds</span>
+	{{/unless}}{{/if}}{{/if}}
 {{/each}}
-</ul>
+<h2>Your Subscriptions</h2>
+{{#each subscriptions}}
+<h3 class="accordion__heading">{{name}}</h3>
+<div class="accordion__panel">
+	{{#each feeds}}
+	<li><a href="{{url}}">{{title}}</a></li>
+	{{/each}}
+</div>
+{{/each}}
+</div>
+
 {{!-- this needs to go under the body because we're looking for elements in the dom --}}
 <script src='/javascripts/dash_scripts.js'></script>
+{{!-- script to run accordion --}}
+<script src='/javascripts/aria.accordion.min.js'></script>
