@@ -57,8 +57,7 @@ router.get('/',
       // await the loop so it has a chance to finish running before rending the page
       async function waitForFeeds(){
         let feeds = await checkLists(lists);
-        let subscriptions = await getlists.byname({$not: {owner: user._id}, subscribers: user._id})
-        console.log(`user id is ${user._id}`)
+        let subscriptions = await getlists.byname({$not: {owner: user._id}, subscribers: user.pocket_token})
         // if there are any feeds for this user, checkLists will return true and then break the loop;
         // if there are no feeds, checkists returns nothing, so feeds will be undefined (i.e. falsy)
         myRender(user, lists, feeds, subscriptions)
@@ -149,19 +148,21 @@ router.post('/addname', ensureLoggedIn('/'), function(req, res, next) {
 })
 
 // adding a new list
-router.post('/addlist', ensureLoggedIn('/'), function(req, res, next) {
+router.get('/addlist/', ensureLoggedIn('/'), function(req, res, next) {
+
   // get the current user
   db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc) {
-    if (err) {return console.error("shit \n" + err)};
+    if (err) {return res.json({result: 'fail'})};
     var owner = doc._id, subscriber = doc.pocket_token;
     // get the data from the form and update the lists
-    var listName = req.body.list.toString(); //TODO do we need to sanitise this a bit more?
+    var listName = req.query.listName; //TODO we need to sanitise this
     var doc = {name: listName, owner: owner, public: false, subscribers: [subscriber]}
     db.lists.insert(doc, function(err, newDoc) {
-      if (err) {return console.error("shit \n" + err)};
-      console.log('inserted ' + newDoc)
+      if (err) {return res.json({result: 'fail'})};
+      console.log('inserted ' + newDoc);
+      // res.json({result: 'success', list: newDoc});
+      res.redirect('/dashboard');
     });
   })
-  res.redirect('/dashboard');
 })
 module.exports = router;

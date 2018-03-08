@@ -36,7 +36,7 @@ Gratefully used under MIT license  */
 
 .js .accordion__trigger {
 	-webkit-appearance: none;
-		background-color: var(--header-text-color);
+	background-color: var(--header-text-color);
 	border: none;
 	border-radius: 0;
 	box-shadow: none;
@@ -48,7 +48,7 @@ Gratefully used under MIT license  */
 	position: relative;
 	text-align: left;
 	width: 100%;
-	z-index: 2;
+	z-index: 7;
 }
 
 /**
@@ -93,7 +93,7 @@ Gratefully used under MIT license  */
 	padding: .05em 1.25em;
 	position: relative;
 	visibility: hidden;
-	z-index: 1;
+	z-index: 6;
 }
 
 .js .accordion__panel {

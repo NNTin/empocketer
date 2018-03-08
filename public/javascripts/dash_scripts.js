@@ -1,88 +1,80 @@
-// AJAX call to remove list
-function removeList(id){
-	const req = new XMLHttpRequest();
-	req.addEventListener('load', function(){
-		var response = JSON.parse(this.responseText);
-		var listing = document.querySelector(`[name=${id}]`);
-		if (response.result === 'success') {
-				// delete the element
-				listing.parentNode.removeChild(listing);
-		} else {
-			var failDiv = document.createElement('div');
-			failDiv.className = 'fail';
-			var failText = document.createTextNode('something went wrong');
-			failDiv.appendChild(failText);
-			listing.appendChild(failDiv);
-			console.error('error')
-		}
-	});
-	req.open('GET', `${window.location.protocol}//${window.location.host}/dashboard/removelist/${id}`, true);
-	req.setRequestHeader('enctype', 'text/plain')
-	req.send();
-}
-
-// cancel deletion
-function cancelDeletion(cancel, id){
-	var title = document.querySelector(`a[name=${id}]`);
-	var button = document.getElementById(id);
-	// remove cancel button completely
-	cancel.parentNode.removeChild(cancel);
-	// change confirm button back
-	button.setAttribute('class', 'delList');
-	button.textContent ='delete';
-	// change text back
-	title.removeAttribute('class');
-}
-
-// listen for delete confirmation
-function getDelButton(id){
-	// get the button that triggered the deletion action
-	var delButton = document.getElementById(id);
-	// get the cancel button for that element
-	var cancelButton = delButton.nextSibling.nextSibling;
-
-	function confirm(event) {
-			// now check the list and delete the listing once confirmed
-			removeList(id)
-		}
-
-	function cancel(event) {
-		// we need to remove the confirm eventListener, otherwise the next delete click will be treated as a confirm.
-		delButton.removeEventListener('click', confirm);
-		cancelDeletion(event.target, id)
-	}
-
-	delButton.addEventListener('click', confirm);
-	cancelButton.addEventListener('click', cancel);
-}
-
-// this loads on page load
-// listen for
+// REMOVE LIST
+// listen for clicks on 'delete list'
 var removeButton = document.getElementsByClassName('delList');
 for (i = 0; i < removeButton.length; i++){
 	removeButton[i].addEventListener('click', function(event){
-		event.preventDefault();
 		var id = event.target.id;
+		var modal = document.getElementById('deleteListModal');
+		var confirm = document.getElementById('deleteListConfirm');
+		var cancel = document.getElementById('deleteListCancel');
+		// make the modal visible
+		modal.style.display = "block";
+		// event listeners for further clicks on Yes or No.
+		confirm.addEventListener('click', removeList);
+		cancel.addEventListener('click', hideCheckModal);
 
-		// change the 'delete' button to a 'confirm' button
-		var button = event.target;
-		var title = document.querySelector(`a[name=${id}]`);
-		title.setAttribute('class', 'strikeout');
-		button.setAttribute('class', 'confirm');
-		button.textContent = 'Confirm you want to delete this list';
-
-		// remove the hint if there is one
-		var hint = document.getElementsByClassName("hint")[0];
-		if (hint) {
-			hint.parentNode.removeChild(hint);
+		function hideCheckModal() {
+			var modal = document.getElementById('deleteListModal');
+			var confirm = document.getElementById('deleteListConfirm');
+			var cancel = document.getElementById('deleteListCancel');
+			// cancel eventlisteners
+			confirm.removeEventListener('click', removeList);
+			cancel.removeEventListener('click', hideCheckModal);
+			// change name back
+			confirm.setAttribute('name', '');
+			// hide modal
+			modal.style.display = "none";
 		}
 
-		// add an undelete button
-		var undelete = document.createElement("button");
-		undelete.setAttribute('class', 'undelete');
-		undelete.textContent = 'Cancel';
-		button.parentElement.appendChild(undelete);
-		// we need to call this as a function otherwise it only runs on page load
-		getDelButton(id)
+		// AJAX call to remove list
+		function removeList(){
+			const req = new XMLHttpRequest();
+			// this is effectively a callback on the request
+			req.addEventListener('load', function(){
+				var response = JSON.parse(this.responseText);
+				var listHeader = document.querySelector(`#${id}`);
+				var listDetails = document.querySelector(`[name=${id}]`);
+				if (response.result === 'success') {
+					// delete the list elements
+					listHeader.parentNode.removeChild(listHeader);
+					listDetails.parentNode.removeChild(listDetails);
+					// cleanup
+					hideCheckModal(modal, confirm, cancel)
+				} else {
+					var failDiv = document.createElement('div');
+					failDiv.className = 'fail';
+					var failText = document.createTextNode('something went wrong');
+					failDiv.appendChild(failText);
+					listing.appendChild(failDiv);
+					console.error('error')
+				}
+			});
+
+			req.open('GET', `${window.location.protocol}//${window.location.host}/dashboard/removelist/${id}`, true);
+			req.setRequestHeader('enctype', 'text/plain')
+			req.send();
+		}
 	});
 }
+
+// ADD LIST
+var addList = document.getElementById('addListButton');
+addList.addEventListener('click', function(event){
+	event.stopPropagation();
+
+	// function to cancel and hide modal
+	function cancelAddList(event) {
+		event.preventDefault();
+		var listDiv = document.querySelector("#lists");
+		modal.style.display = "none";
+	}
+
+	// show the modal
+	var modal = document.getElementById('newListModal');
+	modal.style.display = "block";
+	// hide the modal if the user click cancel
+	var cancelAdd = document.getElementById('addListCancel');
+	cancelAdd.addEventListener('click', cancelAddList);
+});
+
+

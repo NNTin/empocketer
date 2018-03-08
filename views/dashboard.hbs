@@ -7,43 +7,70 @@
 
 <form action="/dashboard/addname" method="post">
 	<label for="name">Name: </label>
-	<input id="name" type="text" value="{{user.name}}" name="name">
-	<input id="addNameButton" type="submit" value="Save Name">
+	<span id="name" type="text" value="" name="name">{{user.name}}</span>
+	<input id="addNameButton" type="submit" value="Edit Name">
 	{{#unless user.name}}<span class="hint">Start by telling us who you are!</span>{{/unless}}
 </form>
 
-<form action="/dashboard/addlist" method="post">
-	<label for="list">New List: </label>
-	<input id="list" type="text" name="list">
-	<input id="addListButton" type="submit" value="Save List">
-	{{#unless lists}}<span class="hint">Create a name for your first list</span>{{/unless}}
-</form>
+<button id="addListButton" class="popup">Create a new list</button>
 
-<div class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
+{{!-- Lists --}}
+<div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Lists</h2>
+
+{{#unless lists}}<span class="hint">Create a name for your first list</span>{{/unless}}
+
 {{#each lists}}
-	<h3 class="accordion__heading">
-		{{name}} | feeds: {{feeds.length}} | subs: {{subscribers.length}}
+	<h3 id="list{{_id}}" class="accordion__heading">
+	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
 	</h3>
-  <div class="accordion__panel">
-		<button class="delList" id="list{{_id}}">delete</button>
+  <div  name="list{{_id}}" class="accordion__panel">
+		<button class="delList" id="list{{_id}}">Delete List</button>
+		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
 		{{#each feeds}}
-		<li><a href="{{url}}">{{title}}</a></li>
+		<li><a href="{{url}}">{{title}}</a><button class="removeButton">✘</button></li>
 		{{/each}}
 	</div>
 	{{#if @first}}{{#if ../lists}}{{#unless ../feeds}}
-	<span class="hint">click or tap on the list name to add feeds</span>
+		<span class="hint">click or tap on the list name to add feeds</span>
 	{{/unless}}{{/if}}{{/if}}
 {{/each}}
+</div>
+
+{{!-- subscriptions --}}
+<div id="subscriptions" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Subscriptions</h2>
+<button id="addListButton" class="popup">Subscribe to new lists</button>
 {{#each subscriptions}}
-<h3 class="accordion__heading">{{name}}</h3>
+<h3 class="accordion__heading">
+	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
+</h3>
 <div class="accordion__panel">
+	<button class="unsubscribe" class="popup">Unsubscribe</button>
+	<button id="cloneList" class="popup">Clone List</button>
 	{{#each feeds}}
 	<li><a href="{{url}}">{{title}}</a></li>
 	{{/each}}
 </div>
 {{/each}}
+</div>
+
+	{{!-- modals --}}
+<div id="newListModal" class="modal">
+	<div class="modal-content modal-add">
+		<label for="listName">Name your new list</label>
+		<form action="/dashboard/addlist">
+		<input name="listName" type=text id="newListName" required><br>
+		<input type="submit" id="addListConfirm" class="addList" value="Add"></input>&nbsp&nbsp<button id="addListCancel" class="cancel">Cancel</button>
+	</form>
+	</div>
+</div>
+
+<div id="deleteListModal" class="modal">
+	<div class="modal-content modal-confirm">
+		<p>Are you sure you want to delete this list?</p>
+		<button id="deleteListConfirm" class="confirm">Yes</button>&nbsp&nbsp<button id="deleteListCancel" class="cancel">No</button>
+	</div>
 </div>
 
 {{!-- this needs to go under the body because we're looking for elements in the dom --}}
