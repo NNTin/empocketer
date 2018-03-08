@@ -31,9 +31,9 @@
 		<li><a href="{{url}}">{{title}}</a><button class="removeButton">✘</button></li>
 		{{/each}}
 	</div>
-	{{#if @first}}{{#if ../lists}}{{#unless ../feeds}}
+	{{#if @first}}{{#unless ../lists}}{{#unless ../feeds}}
 		<span class="hint">click or tap on the list name to add feeds</span>
-	{{/unless}}{{/if}}{{/if}}
+	{{/unless}}{{/unless}}{{/if}}
 {{/each}}
 </div>
 
