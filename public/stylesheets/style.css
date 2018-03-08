@@ -82,9 +82,8 @@ footer a {
 }
 /* CLASSES */
 
-#addNameButton,
-.addList,
-#cloneList,
+.add,
+.submit,
 .addFeedButton,
 .sendBug,
 .confirm {
@@ -123,6 +122,12 @@ footer a {
   background-color: var(--failure);
   border: 1px solid red;
   color: #fff;
+}
+
+.feed-url {
+  width: 90%;
+  height: 1rem;
+  margin-bottom: 1rem;
 }
 
 form .bugreport {

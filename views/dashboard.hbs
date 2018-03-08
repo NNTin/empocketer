@@ -12,7 +12,7 @@
 	{{#unless user.name}}<span class="hint">Start by telling us who you are!</span>{{/unless}}
 </form>
 
-<button id="addListButton" class="popup">Create a new list</button>
+<button id="addListButton" class="add">Create a new list</button>
 
 {{!-- Lists --}}
 <div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
@@ -40,7 +40,7 @@
 {{!-- subscriptions --}}
 <div id="subscriptions" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Subscriptions</h2>
-<button id="addListButton" class="popup">Subscribe to new lists</button>
+<button id="addListButton" class="add">Subscribe to new lists</button>
 {{#each subscriptions}}
 <h3 class="accordion__heading">
 	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
@@ -61,7 +61,7 @@
 		<label for="listName">Name your new list</label>
 		<form action="/dashboard/addlist">
 		<input name="listName" type=text id="newListName" required><br>
-		<input type="submit" id="addListConfirm" class="addList" value="Add"></input>&nbsp&nbsp<button id="addListCancel" class="cancel">Cancel</button>
+		<input type="submit" id="addListConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="addListCancel" class="cancel">Cancel</button>
 	</form>
 	</div>
 </div>
@@ -70,6 +70,16 @@
 	<div class="modal-content modal-confirm">
 		<p>Are you sure you want to delete this list?</p>
 		<button id="deleteListConfirm" class="confirm">Yes</button>&nbsp&nbsp<button id="deleteListCancel" class="cancel">No</button>
+	</div>
+</div>
+
+<div id="newFeedModal" class="modal">
+	<div class="modal-content modal-add">
+		<label for="listName">Enter the URL for the site</label>
+		<form id="addFeedForm" action="/lists/{{user._id}}">
+		<input name="feedUrl" type="url" id="feedUrl" class="feed-url" required><br>
+		<input type="submit" id="addFeedConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="addFeedCancel" class="cancel">Cancel</button>
+	</form>
 	</div>
 </div>
 

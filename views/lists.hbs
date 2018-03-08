@@ -5,10 +5,12 @@
 {{!-- Drop down lists for each list. Thanks to Scott O'Hara for sharing his accessible_accordians code at https://github.com/scottaohara/accessible_accordions --}}
 <div class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 	{{#each lists}}
+	{{!-- accessible accordions turns this into a button so we can't put any other buttons in the heading --}}
   <h3 class="accordion__heading">
-    {{name}} ({{subscribers.length}} subscribed) -- {{ownerName}}
+    {{name}} by {{ownerName}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
   </h3>
   <div class="accordion__panel">
+		<button>subscribe</button>
     <ul>
 			{{#if feeds}}
       {{#each feeds}}

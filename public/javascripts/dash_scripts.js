@@ -65,7 +65,6 @@ addList.addEventListener('click', function(event){
 	// function to cancel and hide modal
 	function cancelAddList(event) {
 		event.preventDefault();
-		var listDiv = document.querySelector("#lists");
 		modal.style.display = "none";
 	}
 
@@ -76,5 +75,30 @@ addList.addEventListener('click', function(event){
 	var cancelAdd = document.getElementById('addListCancel');
 	cancelAdd.addEventListener('click', cancelAddList);
 });
+
+// ADD FEED
+var addFeed = document.getElementsByClassName('addFeedButton');
+// add an event listener to the 'addFeedButton' in each feed
+for (feed of addFeed) {
+	feed.addEventListener('click', function(event){
+
+		// function to cancel and hide modal
+		function cancelAddFeed(event) {
+			event.preventDefault();
+			cancelAddF.removeEventListener('click', cancelAddFeed);
+			addFeedModal.style.display = "none";
+		}
+		// show the modal
+		var addFeedModal = document.querySelector('#newFeedModal');
+		var targetSuffix = `${event.target.id}/addfeed`;
+		var formTarget = document.querySelector('#addFeedForm');
+		formTarget.setAttribute('action', `${formTarget.action}/${targetSuffix}`)
+		addFeedModal.style.display = "block";
+		// hide the modal if the user click cancel
+		var cancelAddF = document.getElementById('addFeedCancel');
+		cancelAddF.addEventListener('click', cancelAddFeed);
+		// if the user adds a URL and click 'Add' the form will take care of it so no need for anything here.
+	})
+}
 
 

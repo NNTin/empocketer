@@ -5,8 +5,9 @@ var passport = require('passport');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn; // might have been nice for this to be in the README 🙄
 var settings = require('../settings');
 // require local files
-var pocketfeeds = require('../pocketfeeds');
+var getlists = require('../getlists');
 var db = require('../nedb.js');
+var pocketfeeds = require('../pocketfeeds');
 
 // get logged in user
 // wrap the DB call up in a promise
@@ -103,7 +104,8 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
   // use final async function to render the page once all the data is ready
   async function renderLists(pUser) {
     let user = await getUser(pUser); // get username for header
-    let lists = await attachOwners(); // updated lists once they're ready
+    // let lists = await attachOwners(); // updated lists once they're ready
+    let lists = await getlists.byname({});
     // wrap up both promises in a new one and once it's ready, render page;
     Promise.all([user, lists]).then(function(vals){
       res.render('lists', {
@@ -268,17 +270,17 @@ getOwner(req.params.userId, req.params.listId);
 });
 
 // POST for adding feeds
-router.post('/:userId/:listId/addfeed', ensureLoggedIn('/'), function(req, res){
+router.get('/:userId/list:listId/addfeed', ensureLoggedIn('/'), function(req, res){
   var userId = req.params.userId;
   var list = req.params.listId;
-  pocketfeeds.checkUrl(req.body.url, function(err, data) {
+  pocketfeeds.checkUrl(req.query.feedUrl, function(err, data) {
     if (err) {
       console.error(err)
       // send to error page
       res.redirect(`/lists/${userId}/${list}/error/${err}`);
     }
     else {
-      var url = req.body.url,
+      var url = req.query.feedUrl,
           feed = data.feed, // fetch from url
           title = data.title; // fetch from url
       // add to list of feeds
@@ -301,7 +303,7 @@ router.post('/:userId/:listId/addfeed', ensureLoggedIn('/'), function(req, res){
             if (err) {
               return res.redirect(`/lists/${userId}/${list}/error/${err}`)
             }
-            res.redirect(`/lists/${userId}/${list}`);
+            res.redirect(`/dashboard`);
           });
         }
       });
