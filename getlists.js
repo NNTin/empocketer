@@ -5,10 +5,8 @@ var db = require('./nedb.js');
 var getlists = module.exports = {};
 
 getlists.byname = function(options) {
-	console.log('options HERE are ' + options)
 	// wrap the DB call up in a promise
   function getLists() {
-		console.log(`options are ${options}`)
     return new Promise((resolve, reject) => {
       //TODO once finished testing, restrict this to public: true
       db.lists.find(options).sort({name: 1, subscribers: -1}).exec(function(err, docs) {
