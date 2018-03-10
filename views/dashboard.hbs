@@ -29,7 +29,7 @@
 		<button class="delList" id="list{{_id}}">Delete List</button>
 		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
 		<label for="isPublic" class="toggle-label">Public</label>
-		<input type="checkbox" id="isPublic" name="owner{{owner}}-list{{_id}}" class="publicToggle" value="{{public}}"/>
+		<input type="checkbox" id="isPublic" name="owner{{owner}}-list{{_id}}" class="publicToggle" {{#if public}} checked {{/if}}/>
 		<ul name="list{{_id}}">
 			{{#each feeds}}
 			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>

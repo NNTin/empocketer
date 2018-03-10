@@ -350,17 +350,16 @@ router.post('/toggle/owner:owner-list:id/:pub', ensureLoggedIn('/'), function(re
     let listID = req.params.id;
     let owner = req.params.owner;
     let pub = req.params.pub;
+    // pub is a string, so we need to make it a boolean
+    if (pub === "true") {pub = true} else pub = false;
     if (uID === owner){
-      res.send('this will succeed')
       db.lists.update({_id: listID}, {$set: {public: pub}}, {}, function(err, num) {
         console.log(num)
       })
     } else {
       res.send('Permission Denied')
     }
-
   });
-
 });
 
 module.exports = router;

@@ -176,7 +176,6 @@ function publicToggle() {
 
 	req.addEventListener('load', function(){
 		var response = this.responseText;
-		console.log(response)
 	});
 	// post to server
 	req.open('POST', `${window.location.protocol}//${window.location.host}/lists/toggle/${name}/${checked}`, true);
