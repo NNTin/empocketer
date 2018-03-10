@@ -69,6 +69,10 @@ textarea {
   border: 1px solid var(--subtle);
 }
 
+ul {
+  list-style-type: none;
+}
+
 footer {
   margin: 0 -50px;
   padding: 5vw;
@@ -116,7 +120,7 @@ footer a {
 
 .coming-soon {
   color: var(--subtle);
-  border: 2px solid var(--subtle);
+  border: 2px dotted var(--subtle);
 }
 
 .error {
@@ -192,7 +196,8 @@ div.logInButton {
   font-size: 80%;
 }
 
-.publicToggle {
+.publicToggle,
+.subToggle {
   visibility: hidden;
   width: 0;
   margin: 0;
@@ -209,6 +214,12 @@ div.logInButton {
   content: 'Make Private';
 }
 
+.subToggle:checked + .switch::before {
+  color: var(--warning);
+  border-color: var(--warning);
+  content: 'Unsubscribe';
+}
+
 .switch::before {
   position: relative;
   display: inline-block;
@@ -218,6 +229,10 @@ div.logInButton {
   content: 'Make Public';
   font-size: 1em;
   padding: 0 1em;
+}
+
+.sub::before {
+  content: 'Subscribe';
 }
 
 .reportform {

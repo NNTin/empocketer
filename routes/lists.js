@@ -108,6 +108,15 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
     let lists = await getlists.byname({});
     // wrap up both promises in a new one and once it's ready, render page;
     Promise.all([user, lists]).then(function(vals){
+      // here we update each list to show whether the currently logged in user subscribes to it.
+      // this is used to make sure the 'subscribed/unsubcribed' indicator is correct
+      for (list of vals[1]) {
+        if (list.subscribers.includes(vals[0].pocket_token)) {
+          list.subscribed = true;
+        } else {
+          list.subscribed = false;
+        }
+      }
       res.render('lists', {
         user: vals[0], //vals[0] is the result of the user promise
         appname: settings.APP_NAME,
@@ -269,7 +278,7 @@ router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
 getOwner(req.params.userId, req.params.listId);
 });
 
-// POST for adding feeds
+// GET for adding feeds
 router.get('/:userId/list:listId/addfeed', ensureLoggedIn('/'), function(req, res){
   var userId = req.params.userId;
   var list = req.params.listId;
@@ -362,4 +371,30 @@ router.post('/toggle/owner:owner-list:id/:pub', ensureLoggedIn('/'), function(re
   });
 });
 
+// toggle subscriptions
+router.post('/subscribe/list:id-:sub', ensureLoggedIn('/'), function(req, res){
+  getUser(req.session.passport.user).then((user) => {
+    let listID = req.params.id;
+    let sub = req.params.sub;
+    let token = user.pocket_token;
+    // listID is a string, so we need to make it a boolean
+    if (sub === "true") {
+      db.lists.update({_id: listID}, {$push: {subscribers: token}}, {}, function(err, num) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(num)
+        }
+      })
+    } else {
+      db.lists.update({_id: listID}, {$pull: {subscribers: token}}, {}, function(err, num) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(num)
+        }
+      });
+    }
+  });
+})
 module.exports = router;
