@@ -342,4 +342,25 @@ router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(r
   })
 });
 
+// toggle publicness of lists
+router.post('/toggle/owner:owner-list:id/:pub', ensureLoggedIn('/'), function(req, res){
+
+  getUser(req.session.passport.user).then((user) => {
+    let uID = user._id;
+    let listID = req.params.id;
+    let owner = req.params.owner;
+    let pub = req.params.pub;
+    if (uID === owner){
+      res.send('this will succeed')
+      db.lists.update({_id: listID}, {$set: {public: pub}}, {}, function(err, num) {
+        console.log(num)
+      })
+    } else {
+      res.send('Permission Denied')
+    }
+
+  });
+
+});
+
 module.exports = router;
