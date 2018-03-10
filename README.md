@@ -23,11 +23,9 @@ You will need to [register your app with Pocket](https://getpocket.com/developer
 If you want to run it on a server (i.e. not to just test on your own machine) you'll need to set up something like `forever` or `systemd` to keep it running. It will default to run on port 3000 so you'll need to [configure a proxy](https://www.sitepoint.com/configuring-nginx-ssl-node-js/)
 
 # Todos
-* add ability to see all lists that subscribe to a particular sites
-* add ability to set lists as 'public' so other users can subscribe and see who the owner is
+* add ability to see all lists that subscribe to a particular site
 * add ability to delete account (will need to remove user id from all subscriptions, QUESTION: what happens to lists the user created that are subscribed to by other people?)
 * Create lists via OPML upload
-* general styling and design improvements
 * more complete installation instructions including hosting config
 
 # License
