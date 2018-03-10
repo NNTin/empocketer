@@ -32,7 +32,6 @@
 			<input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle" {{#if public}} checked {{/if}}/>
 			<span class="switch"></span>
 		</label>
-
 		<ul name="list{{_id}}">
 			{{#each feeds}}
 			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>
@@ -48,7 +47,7 @@
 {{!-- subscriptions --}}
 <div id="subscriptions" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Subscriptions</h2>
-<button id="addListButton" class="add coming-soon">Subscribe to new lists</button>
+<a href="/lists"><button id="addListButton" class="add">Subscribe to new lists</button></a>
 {{#each subscriptions}}
 <h3 class="accordion__heading">
 	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
