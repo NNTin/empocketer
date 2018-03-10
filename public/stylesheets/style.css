@@ -53,7 +53,7 @@ input[type="text"] {
   color: var(--success);
 }
 
-label {
+.modal-label {
     display: block;
     margin: 1em 0 1em;
     font-style: italic;
@@ -103,7 +103,7 @@ footer a {
 }
 
 .delList,
-.removeButton,
+.delFeed,
 .unsubscribe,
 .cancel {
   font-size: 1em;
@@ -111,7 +111,12 @@ footer a {
   color: var(--failure);
   border: 2px solid var(--failure);
   background-color: #fff;
-  margin-bottom: 2em;
+  margin: 0 0 2em 1em;
+}
+
+.coming-soon {
+  color: var(--subtle);
+  border: 2px solid var(--subtle);
 }
 
 .error {

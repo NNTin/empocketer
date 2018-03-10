@@ -121,7 +121,7 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
 })
 
 // remove feed and report back to page
-router.get('/removefeed/list:list-:id', ensureLoggedIn('/'), function(req, res){
+router.get('/removefeed/list:list/feed:id', ensureLoggedIn('/'), function(req, res){
   var id = req.params.id;
   var listId = req.params.list;
   // get the feed, then remove this list from the feed's lists array
@@ -321,6 +321,8 @@ router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(r
     if (err) {
       console.error(err)
       // send to error page
+      // PROBLEM - we're already on the error page so this throws a massive error!
+      // can't send headers twice. Can we use a try...catch and deal with it another way?
       return res.redirect(`/lists/${user}/${list}/error/${err}`);
     } else {
       // update the DB

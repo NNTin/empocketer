@@ -8,11 +8,12 @@
 <form action="/dashboard/addname" method="post">
 	<label for="name">Name: </label>
 	<span id="name" type="text" value="" name="name">{{user.name}}</span>
-	<input id="addNameButton" type="submit" value="Edit Name">
+	<input id="addNameButton" type="submit" class="submit coming-soon" value="Edit Name">
 	{{#unless user.name}}<span class="hint">Start by telling us who you are!</span>{{/unless}}
 </form>
 
 <button id="addListButton" class="add">Create a new list</button>
+<button id="addOPMLButton" class="add coming-soon">New List from OPML</button>
 
 {{!-- Lists --}}
 <div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
@@ -24,12 +25,16 @@
 	<h3 id="list{{_id}}" class="accordion__heading">
 	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
 	</h3>
-  <div  name="list{{_id}}" class="accordion__panel">
+  <div name="list{{_id}}" class="accordion__panel">
 		<button class="delList" id="list{{_id}}">Delete List</button>
 		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
-		{{#each feeds}}
-		<li><a href="{{url}}">{{title}}</a><button class="removeButton">✘</button></li>
-		{{/each}}
+		<label for="isPublic" class="coming-soon">Public</label>
+		<input type="checkbox" id="isPublic" name="isPublic" class="toggle"/>
+		<ul name="list{{_id}}">
+			{{#each feeds}}
+			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>
+			{{/each}}
+		</ul>
 	</div>
 	{{#if @first}}{{#unless ../lists}}{{#unless ../feeds}}
 		<span class="hint">click or tap on the list name to add feeds</span>
@@ -40,14 +45,14 @@
 {{!-- subscriptions --}}
 <div id="subscriptions" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Subscriptions</h2>
-<button id="addListButton" class="add">Subscribe to new lists</button>
+<button id="addListButton" class="add coming-soon">Subscribe to new lists</button>
 {{#each subscriptions}}
 <h3 class="accordion__heading">
 	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
 </h3>
 <div class="accordion__panel">
-	<button class="unsubscribe" class="popup">Unsubscribe</button>
-	<button id="cloneList" class="popup">Clone List</button>
+	<button class="unsubscribe coming-soon">Unsubscribe</button>
+	<button id="cloneList" class="add coming-soon">Clone List</button>
 	{{#each feeds}}
 	<li><a href="{{url}}">{{title}}</a></li>
 	{{/each}}
@@ -58,7 +63,7 @@
 	{{!-- modals --}}
 <div id="newListModal" class="modal">
 	<div class="modal-content modal-add">
-		<label for="listName">Name your new list</label>
+		<label class="modal-label" for="listName">Name your new list</label>
 		<form action="/dashboard/addlist">
 		<input name="listName" type=text id="newListName" required><br>
 		<input type="submit" id="addListConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="addListCancel" class="cancel">Cancel</button>
@@ -66,16 +71,16 @@
 	</div>
 </div>
 
-<div id="deleteListModal" class="modal">
+<div id="deleteModal" class="modal">
 	<div class="modal-content modal-confirm">
-		<p>Are you sure you want to delete this list?</p>
-		<button id="deleteListConfirm" class="confirm">Yes</button>&nbsp&nbsp<button id="deleteListCancel" class="cancel">No</button>
+		<p>Are you sure you want to delete this?</p>
+		<button id="deleteConfirm" class="confirm">Yes</button>&nbsp&nbsp<button id="deleteCancel" class="cancel">No</button>
 	</div>
 </div>
 
 <div id="newFeedModal" class="modal">
 	<div class="modal-content modal-add">
-		<label for="listName">Enter the URL for the site</label>
+		<label class="modal-label" for="listName">Enter the URL for the site</label>
 		<form id="addFeedForm" action="/lists/{{user._id}}">
 		<input name="feedUrl" type="url" id="feedUrl" class="feed-url" required><br>
 		<input type="submit" id="addFeedConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="addFeedCancel" class="cancel">Cancel</button>
