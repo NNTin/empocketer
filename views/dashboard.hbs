@@ -23,13 +23,16 @@
 
 {{#each lists}}
 	<h3 id="list{{_id}}" class="accordion__heading">
-	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
+	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}} {{#unless public}}&nbsp&nbsp🙊{{/unless}}
 	</h3>
   <div name="list{{_id}}" class="accordion__panel">
 		<button class="delList" id="list{{_id}}">Delete List</button>
 		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
-		<label for="isPublic" class="toggle-label">Public</label>
-		<input type="checkbox" id="isPublic" name="owner{{owner}}-list{{_id}}" class="publicToggle" {{#if public}} checked {{/if}}/>
+		<label for="owner{{owner}}-list{{_id}}" class="toggle-label">
+			<input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle" {{#if public}} checked {{/if}}/>
+			<span class="switch"></span>
+		</label>
+
 		<ul name="list{{_id}}">
 			{{#each feeds}}
 			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>

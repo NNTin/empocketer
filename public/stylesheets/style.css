@@ -92,7 +92,7 @@ footer a {
   color: var(--success);
   border: 2px solid var(--success);
   background-color: #fff;
-  margin: 1em 0 2em;
+  margin: 1em 0;
 }
 
 .warn {
@@ -190,6 +190,34 @@ div.logInButton {
   padding: 0 1em;
   color: var(--subtle);
   font-size: 80%;
+}
+
+.publicToggle {
+  visibility: hidden;
+  width: 0;
+  margin: 0;
+}
+
+.toggle-label {
+  margin: 0;
+  padding: 0;
+}
+
+.publicToggle:checked + .switch::before {
+  color: var(--warning);
+  border-color: var(--warning);
+  content: 'Make Private';
+}
+
+.switch::before {
+  position: relative;
+  display: inline-block;
+  line-height: 1.75em;
+  color: var(--success);
+  border: 2px solid var(--success);
+  content: 'Make Public';
+  font-size: 1em;
+  padding: 0 1em;
 }
 
 .reportform {

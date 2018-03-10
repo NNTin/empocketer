@@ -169,7 +169,7 @@ for (toggle of publicToggles) {
 }
 
 function publicToggle() {
-	const name = this.getAttribute('name');
+	const name = this.getAttribute('id');
 	const checked = this.checked;
 	// post to server to change setting in DB
 	const req = new XMLHttpRequest();
