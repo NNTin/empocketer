@@ -53,7 +53,11 @@
 	{{name}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
 </h3>
 <div class="accordion__panel">
-	<button class="unsubscribe coming-soon">Unsubscribe</button>
+	<label for="list{{_id}}" class="toggle-label">
+		{{!-- this is always checked on page load because if the user wasn't subscribed they wouldn't be listed here! --}}
+		<input type="checkbox" id="list{{_id}}" class="subToggle" checked/>
+		<span class="switch sub"></span>
+	</label>
 	<button id="cloneList" class="add coming-soon">Clone List</button>
 	{{#each feeds}}
 	<li><a href="{{url}}">{{title}}</a></li>
