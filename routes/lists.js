@@ -117,6 +117,14 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
           list.subscribed = false;
         }
       }
+      // here we add a field to indicate that the current user is the owner of the list
+      // we can't calculate that easily with a client-side script and it's safer to do it here
+      // we prevent owners seeing the subscribe/unsubscribe button in the page template
+      for (list of vals[1]) {
+        if (list.owner === user._id) {
+          list.mylist = true;
+        }
+      }
       res.render('lists', {
         user: vals[0], //vals[0] is the result of the user promise
         appname: settings.APP_NAME,

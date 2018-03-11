@@ -11,10 +11,12 @@
 		    {{name}} by {{ownerName}} &nbsp&nbsp&nbsp&nbsp🔗 {{feeds.length}} &nbsp&nbsp👍{{subscribers.length}}
 		  </h3>
 		  <div class="accordion__panel">
+				{{#unless mylist}}
 				<label for="list{{_id}}" class="toggle-label">
 					<input type="checkbox" id="list{{_id}}" class="subToggle coming-soon" {{#if subscribed}} checked {{/if}}/>
 					<span class="switch sub"></span>
 				</label>
+				{{/unless}}
 		    <ul>
 					{{#if feeds}}
 		      {{#each feeds}}
