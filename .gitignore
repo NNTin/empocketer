@@ -2,3 +2,4 @@ data/
 node_modules/
 settings.json
 dev_to_prod.sh
+uploads/*

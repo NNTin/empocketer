@@ -196,7 +196,8 @@ div.logInButton {
 }
 
 .publicToggle,
-.subToggle {
+.subToggle,
+.opml {
   visibility: hidden;
   width: 0;
   margin: 0;
@@ -205,6 +206,17 @@ div.logInButton {
 .toggle-label {
   margin: 0;
   padding: 0;
+}
+
+.opmlButton::before {
+  position: relative;
+  display: inline-block;
+  line-height: 1.75em;
+  color: var(--subtle);
+  border: 2px dotted var(--subtle);
+  content: 'New from OPML';
+  font-size: 1em;
+  padding: 0 1em;
 }
 
 .publicToggle:checked + .switch::before {

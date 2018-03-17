@@ -4,6 +4,9 @@ var router = express.Router();
 var passport = require('passport');
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn; // might have been nice for this to be in the README 🙄
 var settings = require('../settings');
+var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var fs = require('fs');
 // require local files
 var getlists = require('../getlists');
 var db = require('../nedb.js');
@@ -55,6 +58,7 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
         try {
           // simple assignment here will update docs
           list.feeds = feeds;
+          // TODO SECURITY replace user tokens with just a number of subscribers
           resolve(list)
         } catch (err) {
           reject(console.error(`error finding feeds in getAllLists\n${err}`))
@@ -82,6 +86,7 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
       db.users.findOne({_id: list.owner}, function(err, user){
         try {
           //add their name as ownerName
+          //TODO this should replace the list owner ID with their name rather than adding a new field (SECURITY)
           list.ownerName = user.name;
           resolve(list)
         } catch (e) {
@@ -213,7 +218,7 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
   }
 });
 
-
+// QUESTION has this now been superseded?
 // when the user clicks on a list (either from /lists or /dashboard)
 // it will take them to /lists/userId/listId
 // this is rendered as per below
@@ -404,5 +409,22 @@ router.post('/subscribe/list:id-:sub', ensureLoggedIn('/'), function(req, res){
       });
     }
   });
-})
+});
+
+// add list via OPML file
+// uses multer and opmltojs
+router.post('/opml', ensureLoggedIn('/'), upload.single('opmlfile'), function(req, res){
+// read the file that multer created (req.file.path)
+fs.readFile(req.file.path, 'utf-8', function (err, data) {
+  pocketfeeds.processOpml(req, data, function(x) {
+    console.log(x)
+    res.redirect('../dashboard')
+  })
+});
+
+// TODO delete the file now that we're finished with it
+// TODO await the feed updates before calling res.redirect so they appear in the list (move to pocketfeeds and use a promise?)
+
+});
+
 module.exports = router;

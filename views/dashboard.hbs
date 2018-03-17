@@ -13,8 +13,14 @@
 </form>
 
 <button id="addListButton" class="add">Create a new list</button>
-<button id="addOPMLButton" class="add coming-soon">New List from OPML</button>
-
+<form name="opmlform" action="/lists/opml" method="post" enctype="multipart/form-data">
+	<label class="toggle-label" for="opml">
+		<input id="opml" name="opmlfile" type="file" class="opml coming-soon" accept=".opml">
+		<span class="opmlButton"></span>
+	</label>
+	{{!-- this input should only appear once a file is selected --}}
+	<input class="add coming-soon" type="submit" id="uploadOpml" value="Make lists!"></input>
+</form>
 {{!-- Lists --}}
 <div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
 <h2>Your Lists</h2>
@@ -29,7 +35,7 @@
 		<button class="delList" id="list{{_id}}">Delete List</button>
 		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
 		<label for="owner{{owner}}-list{{_id}}" class="toggle-label">
-			<input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle" {{#if public}} checked {{/if}}/>
+			<input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle"/>
 			<span class="switch"></span>
 		</label>
 		<ul name="list{{_id}}">
