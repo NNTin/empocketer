@@ -414,17 +414,20 @@ router.post('/subscribe/list:id-:sub', ensureLoggedIn('/'), function(req, res){
 // add list via OPML file
 // uses multer and opmltojs
 router.post('/opml', ensureLoggedIn('/'), upload.single('opmlfile'), function(req, res){
-// read the file that multer created (req.file.path)
-fs.readFile(req.file.path, 'utf-8', function (err, data) {
-  pocketfeeds.processOpml(req, data, function(x) {
-    console.log(x)
-    res.redirect('../dashboard')
-  })
-});
-
-// TODO delete the file now that we're finished with it
-// TODO await the feed updates before calling res.redirect so they appear in the list (move to pocketfeeds and use a promise?)
-
+  // read the file that multer created (req.file.path)
+  fs.readFile(req.file.path, 'utf-8', function (err, data) {
+    // process the opml file
+    pocketfeeds.processOpml(req, data, function(x) {
+      // log done when done
+      console.log(x)
+      // delete the file now we're done with it.
+      fs.unlink(req.file.path, (err) => {
+        if (err) throw err;
+        console.log('file deleted');
+      })
+      res.redirect('../dashboard')
+    })
+  });
 });
 
 module.exports = router;
