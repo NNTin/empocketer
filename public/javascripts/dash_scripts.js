@@ -203,7 +203,14 @@ function subscribeToggle() {
 
 const opml = document.getElementById('submitOpml');
 const loader = document.getElementById('loader');
+const opmlLoad = document.getElementById('opmlLabel');
 opml.onclick = processing;
+opmlLoad.oninput = preprocess;
+
+function preprocess() {
+	opml.style.display = 'inline-block';
+	opmlLoad.setAttribute('class', 'hidden');
+}
 
 function processing() {
 	loader.style.display = 'block';

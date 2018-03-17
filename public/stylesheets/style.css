@@ -84,6 +84,12 @@ footer {
 footer a {
   color: #fff;
 }
+
+/* utilities */
+
+.hidden {
+  display: none;
+}
 /* CLASSES */
 
 .add,
@@ -208,15 +214,31 @@ div.logInButton {
   padding: 0;
 }
 
+.opmlForm {
+  display: inline-block;
+  margin-left: 1em;
+}
+
 .opmlButton::before {
   position: relative;
   display: inline-block;
   line-height: 1.75em;
-  color: var(--subtle);
-  border: 2px dotted var(--subtle);
-  content: 'New from OPML';
+  color: var(--header-text-color);
+  border: 2px solid var(--header-text-color);
+  content: 'Use OPML file';
   font-size: 1em;
   padding: 0 1em;
+}
+
+.opmlLoad {
+  position: relative;
+  display: none;
+  line-height: 1.75em;
+  color: var(--warning);
+  border: 2px solid var(--warning);
+  font-size: 1em;
+  padding: 0 1em;
+  background-color: #fff;
 }
 
 .publicToggle:checked + .switch::before {
