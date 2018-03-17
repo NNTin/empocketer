@@ -182,7 +182,6 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 
 
 	function addFeedsToListInOpml(lists) {
-		console.log('adding feeds to list in opml')
 		// map to an array of promises so we can deal with everything and use Promise.all()
 		const promises = lists.map(function(x){
 				return theFeedsFunc(x)
@@ -193,7 +192,7 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 				pocketfeeds.checkFeed(feed.feed, function(err, result) {
 					if (err) {
 						// TODO really should do something a bit better here, and throw it to the screen somehow.
-						console.error(`error with ${feed} - ${err}`)
+						console.error(`error with ${feed.feed} - ${err}`)
 						// we still resolve this, otherwise Promise.all() won't run
 						resolve()
 					} else {
@@ -246,10 +245,10 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 			})
 		}
 		Promise.all(promises)
+		.catch((e) => console.error(`error \n${e}`)) // report all remaining errors
 		.then(function(){
 			return finishCallback('Done!') //returns back to lists.js
 		})
-		.catch((e) => console.error(`error \n${e}`)) //catch all errors
 	}
 
 	// first we take the raw opml file and parse it out using opmltojs

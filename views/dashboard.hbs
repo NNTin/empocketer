@@ -19,7 +19,7 @@
 		<span class="opmlButton"></span>
 	</label>
 	{{!-- this input should only appear once a file is selected --}}
-	<input class="add coming-soon" type="submit" id="uploadOpml" value="Make lists!"></input>
+	<input id="submitOpml" class="add coming-soon" type="submit" id="uploadOpml" value="Make lists!"></input>
 </form>
 {{!-- Lists --}}
 <div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
@@ -97,6 +97,14 @@
 		<input name="feedUrl" type="url" id="feedUrl" class="feed-url" required><br>
 		<input type="submit" id="addFeedConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="addFeedCancel" class="cancel">Cancel</button>
 	</form>
+	</div>
+</div>
+
+<div id="loader" class="modal">
+	<div class="modal-content">
+		<div class="modal-opml"></div>
+		<p>loading OPML...</p>
+		<p>if your file is large this may take a while</p>
 	</div>
 </div>
 

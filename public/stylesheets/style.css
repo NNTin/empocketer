@@ -303,6 +303,32 @@ div.logInButton {
   border-top: 2em solid var(--success);
 }
 
+.modal-opml {
+  margin:-1em;
+  margin-bottom: 1em;
+  animation-duration: 3s;
+  animation-name: loading;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes loading {
+  0% {
+    border-top: 2em solid var(--header-text-color);
+    margin-left: calc(100% + 1em + 1px);
+    width: 0%;
+  }
+  50% {
+    border-top: 2em solid var(--success);
+    margin-left: -1em;
+    width: calc(100% + 2em);
+  }
+  100% {
+    border-top: 2em solid var(--warning);
+    margin-left: -1em;
+    width: 0%;
+  }
+}
 /*
       ********************************
       ***                           **

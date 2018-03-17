@@ -200,3 +200,11 @@ function subscribeToggle() {
 	req.setRequestHeader('enctype', 'text/plain')
 	req.send();
 }
+
+const opml = document.getElementById('submitOpml');
+const loader = document.getElementById('loader');
+opml.onclick = processing;
+
+function processing() {
+	loader.style.display = 'block';
+}
