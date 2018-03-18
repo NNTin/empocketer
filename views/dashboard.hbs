@@ -12,7 +12,8 @@
 	{{#unless user.name}}<span class="hint">Start by telling us who you are!</span>{{/unless}}
 </form>
 
-<button id="addListButton" class="add">Create a new list</button><form class="opmlForm" name="opmlform" action="/lists/opml" method="post" enctype="multipart/form-data"><label id="opmlLabel" class="toggle-label" for="opml"><input id="opml" name="opmlfile" type="file" class="opml" accept=".opml"><span class="opmlButton"></span></label>{{!-- this input should only appear once a file is selected --}}<input id="submitOpml" class="opmlLoad" type="submit" id="uploadOpml" value="Process file!"></input>
+<button id="addListButton" class="add">Create a new list</button>
+<form class="opmlForm" name="opmlform" action="/lists/opml" method="post" enctype="multipart/form-data"><label id="opmlLabel" class="toggle-label" for="opml"><input id="opml" name="opmlfile" type="file" class="opml" accept=".opml"><span class="opmlButton"></span></label>{{!-- this input should only appear once a file is selected --}}<input id="submitOpml" class="opmlLoad" type="submit" id="uploadOpml" value="Process file!"></input>
 </form>
 {{!-- Lists --}}
 <div id="lists" class="js accordion" data-aria-accordion data-multi data-transition=".36" data-default="none">
@@ -25,7 +26,9 @@
 	{{name}} &nbsp&nbsp&nbsp&nbsp📄 {{feeds.length}} &nbsp&nbsp🙂 {{subscribers.length}} {{#unless public}}&nbsp&nbsp🔒{{/unless}}
 	</h3>
   <div name="list{{_id}}" class="accordion__panel">
-		<button class="delList" id="list{{_id}}">Delete List</button><button class="addFeedButton" id="list{{_id}}">Add New Feed</button><label for="owner{{owner}}-list{{_id}}" class="toggle-label"><input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle"/><span class="switch pub"></span></label>
+		<button class="delList" id="list{{_id}}">Delete List</button>
+		<button class="addFeedButton" id="list{{_id}}">Add New Feed</button>
+		<label for="owner{{owner}}-list{{_id}}" class="toggle-label"><input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle"/><span class="switch pub"></span></label>
 		<ul name="list{{_id}}">
 			{{#each feeds}}
 			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>

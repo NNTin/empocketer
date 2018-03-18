@@ -273,18 +273,11 @@ div.logInButton {
 
 .opmlForm {
   display: inline-block;
-  margin-left: 1em;
-}
-
-.opmlButton::before {
-  position: relative;
-  display: inline-block;
-  line-height: 1.75em;
-  color: var(--header-text-color);
-  border: 2px solid var(--header-text-color);
-  content: 'Use OPML file';
-  font-size: 1em;
-  padding: 0 1em;
+	font-size: 17px;
+	box-sizing: border-box;
+	line-height: 1.75em;
+  height: 1.9em;
+  /* margin-left: 1em; */
 }
 
 .opmlLoad {
@@ -310,7 +303,8 @@ div.logInButton {
   content: 'Unsubscribe';
 }
 
-.switch::before {
+.switch::before,
+.opmlButton::before {
   position: relative;
   display: inline-block;
   line-height: 1.75em;
@@ -321,6 +315,12 @@ div.logInButton {
   font-size: 17px;
   padding: 0 1em;
   box-sizing: border-box;
+}
+
+.opmlButton::before {
+	color: var(--header-text-color);
+	border: 2px solid var(--header-text-color);
+	content: 'Use OPML file';
 }
 
 .sub::before {
@@ -355,11 +355,12 @@ div.logInButton {
 
 /* Gecko/Firefox hack for positioning spans inside labels */
 @-moz-document url-prefix() {
-  .switch::before,
-  .opmlButton::before
-   {
+  .switch::before {
     height: 2em;
   }
+	.opmlButton::before {
+		height: 1.95em;
+	}
 }
 
 /*
