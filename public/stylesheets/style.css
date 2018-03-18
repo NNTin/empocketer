@@ -123,6 +123,11 @@ footer a {
   margin: 0 0 2em 1em;
 }
 
+.clone {
+  color: var(--header-text-color);
+  border: 2px solid var(--header-text-color);  
+}
+
 .coming-soon {
   color: var(--subtle);
   border: 2px dotted var(--subtle);

@@ -8,7 +8,7 @@ for (i = 0; i < removeListButton.length; i++){
 		var confirm = document.getElementById('deleteConfirm');
 		var cancel = document.getElementById('deleteCancel');
 		// make the modal visible
-		modal.style.display = "block";
+		modal.style.display = 'block';
 		// event listeners for further clicks on Yes or No.
 		confirm.addEventListener('click', removeList);
 		cancel.addEventListener('click', hideCheckModal);
@@ -201,6 +201,7 @@ function subscribeToggle() {
 	req.send();
 }
 
+// OPML upload
 const opml = document.getElementById('submitOpml');
 const loader = document.getElementById('loader');
 const opmlLoad = document.getElementById('opmlLabel');
@@ -215,3 +216,30 @@ function preprocess() {
 function processing() {
 	loader.style.display = 'block';
 }
+
+// clone subscription
+const clone = document.getElementsByClassName('clone');
+const cloneModalList = document.getElementById('cloneListId');
+const cloneModal = document.getElementById('cloneModal');
+
+for (i=0; i<clone.length; i++) {
+
+	clone[i].onclick = function(e){
+		list = e.target.id;
+		cloneModalList.setAttribute('value', list);
+		cloneModal.style.display = 'block';
+
+		function cancelCloneList(event) {
+			event.preventDefault();
+			//clear text field
+			document.getElementById('clonedListName').value = "";
+			// hide modal
+			cloneModal.style.display = "none";
+		}
+
+		var cancelAdd = document.getElementById('cloneListCancel');
+		cancelAdd.addEventListener('click', cancelCloneList);
+	};
+}
+
+

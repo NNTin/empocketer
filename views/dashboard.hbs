@@ -57,7 +57,7 @@
 		<input type="checkbox" id="list{{_id}}" class="subToggle" checked/>
 		<span class="switch sub"></span>
 	</label>
-	<button id="cloneList" class="add coming-soon">Clone List</button>
+	<button id="clone{{_id}}" name="{{name}}" class="clone add">Clone this list</button>
 	{{#each feeds}}
 	<li><a href="{{url}}">{{title}}</a></li>
 	{{/each}}
@@ -93,6 +93,18 @@
 	</div>
 </div>
 
+<div id="cloneModal" class="modal">
+	<div class="modal-content modal-add">
+		<label class="modal-label" for="clonedListName">Name your cloned list</label>
+		<form action="/lists/clone">
+		<input name="listToClone" type="text" id="cloneListId" hidden>
+		<input name="listName" type=text id="clonedListName" required><br>
+		<input type="submit" id="cloneListConfirm" class="submit" value="Add"></input>&nbsp&nbsp<button id="cloneListCancel" class="cancel">Cancel</button>
+	</form>
+	</div>
+</div>
+
+{{!-- not really a modal but we use basically the same design --}}
 <div id="loader" class="modal">
 	<div class="modal-content">
 		<div class="modal-opml"></div>
