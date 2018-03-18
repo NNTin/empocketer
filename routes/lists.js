@@ -1,3 +1,4 @@
+'use strict'
 // require and assign packages
 var express = require('express');
 var router = express.Router();
@@ -115,7 +116,7 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
     Promise.all([user, lists]).then(function(vals){
       // here we update each list to show whether the currently logged in user subscribes to it.
       // this is used to make sure the 'subscribed/unsubcribed' indicator is correct
-      for (list of vals[1]) {
+      for (let list of vals[1]) {
         if (list.subscribers.includes(vals[0].pocket_token)) {
           list.subscribed = true;
         } else {
@@ -125,7 +126,7 @@ router.get('/', ensureLoggedIn('/'), function(req, res, next) {
       // here we add a field to indicate that the current user is the owner of the list
       // we can't calculate that easily with a client-side script and it's safer to do it here
       // we prevent owners seeing the subscribe/unsubscribe button in the page template
-      for (list of vals[1]) {
+      for (let list of vals[1]) {
         if (list.owner === user._id) {
           list.mylist = true;
         }
@@ -223,73 +224,73 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
 // it will take them to /lists/userId/listId
 // this is rendered as per below
 // userId and listId are stored by Express in req.params automatically
-router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
-  // TODO fix this to actually call DB, and provide an if...else that shows a special 404 if the listId doesn't exist.
-
-  function getOwner(owner, list){
-    db.users.findOne({_id: owner}, function(err, user){
-      if (err) {
-        return console.error(err) //TODO something more useful to handle owner errors
-      } else {
-        getListName(user.name, list)
-      }
-    })
-  };
-
-  function getListName(owner, list){
-    db.lists.findOne({_id: list}, function(err, data){
-      if (err) {
-        return console.error(err) //TODO something more useful to handle owner errors
-      } else {
-        getFeeds(owner, list, data.name)
-      }
-    })
-  };
-
-  function getFeeds(owner, list, name){
-    // find all feeds there this list is included in the feed's 'lists' array
-    db.feeds.find({lists: list}, function(err, feeds){
-      if (err) {
-        return console.error(err) //TODO something more useful to handle owner errors
-      } else {
-        // if there is only one feed, the user has *probably* only just started adding them. Show a hint that they will get the next post in their Pocket account.
-        if (feeds.length > 1) {
-          renderList(owner, list, name, feeds, false)
-        } else {
-          renderList(owner, list, name, feeds, true)
-        }
-      }
-    })
-  }
-
-  function renderList(owner, list, name, feeds, firstFeed){
-    // get user details
-  	if (req.session && req.session.passport && req.session.passport.user) {
-  		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
-  			if (err) {return console.error('oh no, error! \n' + err)}
-  			renderPage(doc)
-  		});
-    } else {
-      renderPage()
-    }
-    function renderPage(user){
-      res.render('listdetails', {
-        appname: settings.APP_NAME,
-        title: settings.APP_NAME + ' - ' + name,
-        listid: req.params.listId,
-        ownerid: req.params.userId,
-        owner: owner,
-        name: name,
-        feeds:feeds,
-        user: user,
-        firstfeed: firstFeed
-      })
-    }
-  };
-
-// kick things off
-getOwner(req.params.userId, req.params.listId);
-});
+// router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
+//   // TODO fix this to actually call DB, and provide an if...else that shows a special 404 if the listId doesn't exist.
+//
+//   function getOwner(owner, list){
+//     db.users.findOne({_id: owner}, function(err, user){
+//       if (err) {
+//         return console.error(err) //TODO something more useful to handle owner errors
+//       } else {
+//         getListName(user.name, list)
+//       }
+//     })
+//   };
+//
+//   function getListName(owner, list){
+//     db.lists.findOne({_id: list}, function(err, data){
+//       if (err) {
+//         return console.error(err) //TODO something more useful to handle owner errors
+//       } else {
+//         getFeeds(owner, list, data.name)
+//       }
+//     })
+//   };
+//
+//   function getFeeds(owner, list, name){
+//     // find all feeds there this list is included in the feed's 'lists' array
+//     db.feeds.find({lists: list}, function(err, feeds){
+//       if (err) {
+//         return console.error(err) //TODO something more useful to handle owner errors
+//       } else {
+//         // if there is only one feed, the user has *probably* only just started adding them. Show a hint that they will get the next post in their Pocket account.
+//         if (feeds.length > 1) {
+//           renderList(owner, list, name, feeds, false)
+//         } else {
+//           renderList(owner, list, name, feeds, true)
+//         }
+//       }
+//     })
+//   }
+//
+//   function renderList(owner, list, name, feeds, firstFeed){
+//     // get user details
+//   	if (req.session && req.session.passport && req.session.passport.user) {
+//   		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
+//   			if (err) {return console.error('oh no, error! \n' + err)}
+//   			renderPage(doc)
+//   		});
+//     } else {
+//       renderPage()
+//     }
+//     function renderPage(user){
+//       res.render('listdetails', {
+//         appname: settings.APP_NAME,
+//         title: settings.APP_NAME + ' - ' + name,
+//         listid: req.params.listId,
+//         ownerid: req.params.userId,
+//         owner: owner,
+//         name: name,
+//         feeds:feeds,
+//         user: user,
+//         firstfeed: firstFeed
+//       })
+//     }
+//   };
+//
+// // kick things off
+// getOwner(req.params.userId, req.params.listId);
+// });
 
 // GET for adding feeds
 router.get('/:userId/list:listId/addfeed', ensureLoggedIn('/'), function(req, res){
@@ -429,5 +430,56 @@ router.post('/opml', ensureLoggedIn('/'), upload.single('opmlfile'), function(re
     })
   });
 });
+
+//clone list
+router.get('/clone/', ensureLoggedIn('/'), function(req, res) {
+  // get the user
+  getUser(req.session.passport.user).then((user) => {
+    // get the new name and old id from the submitted query
+    const name = req.query.listName;
+    // remove the 'clone' from the beginning of the ID
+    const id = req.query.listToClone.slice(5);
+
+    function listFeeds(list) {
+      return new Promise((resolve, reject) => {
+        db.feeds.find({lists: list}, function(err, array) {
+          let feeds = array.map(feed => feed._id)
+          if (err) {
+            console.log(`error\n${err}`)
+          } else {
+            resolve(feeds)
+          }
+        })
+      })
+    }
+
+    function getFeeds(feeds) {
+      db.lists.findOne({_id: id}, function(err, list) {
+        let newList = {name: name, owner: user._id, public: false, subscribers: [user.token]}
+        db.lists.insert(newList, function(err, doc) {
+
+          const promises = feeds.map(feed => updateFeedWithList(feed));
+
+          function updateFeedWithList(feed) {
+            return new Promise((resolve, reject) => {
+              db.feeds.update({_id: feed}, {$push:{lists: doc._id}}, {upsert: true}, function(err, num, result, upsert) {
+                if (err) {
+                  console.error(err)
+                } else {
+                  resolve();
+                }
+              })
+            })
+          }
+          Promise.all(promises)
+        })
+      })
+    }
+    // bombs away!
+    listFeeds(id)
+    .then(getFeeds)
+    .then(() => res.redirect('/dashboard'))
+  });
+})
 
 module.exports = router;
