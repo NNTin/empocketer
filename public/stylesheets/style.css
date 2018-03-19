@@ -167,11 +167,14 @@ footer a {
 }
 
 .delList,
-.delFeed,
 .cancel {
   color: var(--failure);
   border: 2px solid var(--failure);
-  /* margin: 0 0 2em 1em; */
+}
+
+.delFeed {
+	color: var(--subtle);
+	border: none;
 }
 
 .clone {

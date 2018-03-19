@@ -386,7 +386,7 @@ pocketfeeds.getListIds = function(link, feedId, callback) {
 		var listIds = [];
 		// each feed might have multiple lists. doc is an array, so we need to iterate over it then push to listIds.
 		function pushIds(callback) {
-			for (i = 0; i < doc.lists.length; i++) {
+			for (let i = 0; i < doc.lists.length; i++) {
 				listIds.push(doc.lists[i])
 			}
 			return callback(null, listIds)

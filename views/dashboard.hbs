@@ -31,7 +31,8 @@
 		<label for="owner{{owner}}-list{{_id}}" class="toggle-label"><input type="checkbox" id="owner{{owner}}-list{{_id}}" class="publicToggle"/><span class="switch pub"></span></label>
 		<ul name="list{{_id}}">
 			{{#each feeds}}
-			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a><button id="feed{{_id}}" class="delFeed">✘</button></li>
+			<li name="feed{{_id}}"><a href="{{url}}">{{title}}</a>
+				<button id="feed{{_id}}" class="delFeed">✘</button></li>
 			{{/each}}
 		</ul>
 	</div>
