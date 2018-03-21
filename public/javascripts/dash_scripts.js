@@ -71,7 +71,7 @@ for (i = 0; i < removeFeedButton.length; i++){
 		// make the modal visible
 		modal.style.display = "block";
 		// event listeners for further clicks on Yes or No.
-		confirm.addEventListener('click', removeFeed);
+		confirm.addEventListener('click', removeFeed); // TODO - this is never removed??
 		cancel.addEventListener('click', hideCheckModal);
 
 		function hideCheckModal() {
@@ -79,8 +79,7 @@ for (i = 0; i < removeFeedButton.length; i++){
 			var confirm = document.getElementById('deleteConfirm');
 			var cancel = document.getElementById('deleteCancel');
 			// cancel eventlisteners
-			// if you don't do this, it will delete every feed you clicked 'delete' on,
-			// even if you cancelled it, because the eventlistener is still active 😧
+			// if you don't do this, it will throw an error later, because the eventlisteners are still active 😧
 			confirm.removeEventListener('click', removeFeed);
 			cancel.removeEventListener('click', hideCheckModal);
 			// hide modal
@@ -88,12 +87,15 @@ for (i = 0; i < removeFeedButton.length; i++){
 		}
 
 		function removeFeed(){
+			// remove listeners here so it doesn't keep the old reference
+			confirm.removeEventListener('click', removeFeed);
+			cancel.removeEventListener('click', hideCheckModal);
 			const req = new XMLHttpRequest();
 			req.addEventListener('load', function(){
 				var response = JSON.parse(this.responseText);
 				if (response.result === 'success') {
 						// delete the element
-						element.parentNode.removeChild(element);
+						element.parentNode.removeChild(element); //TODO parentNode is null if list removed from feed rather than feed simply being deleted? does element need to go in the func?
 						// hide modal
 						modal.style.display = "none";
 				} else {
