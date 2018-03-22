@@ -150,6 +150,7 @@ router.get('/removefeed/list:list/feed:id', ensureLoggedIn('/'), function(req, r
   // get the feed, then remove this list from the feed's lists array
   db.feeds.findOne({_id: id}, function(err, doc){
     // if it is the only list in the array, remove the feed altogether
+    console.log('id is ' + id)
     if (doc.lists.length < 2) {
       try {
         db.feeds.remove({_id: id}, {}, function(err, num) {
@@ -219,78 +220,6 @@ router.get('/:userId/:listId/error/:err', ensureLoggedIn('/'), function(req, res
   }
 });
 
-// QUESTION has this now been superseded?
-// when the user clicks on a list (either from /lists or /dashboard)
-// it will take them to /lists/userId/listId
-// this is rendered as per below
-// userId and listId are stored by Express in req.params automatically
-// router.get('/:userId/:listId', ensureLoggedIn('/'), function(req, res, next){
-//   // TODO fix this to actually call DB, and provide an if...else that shows a special 404 if the listId doesn't exist.
-//
-//   function getOwner(owner, list){
-//     db.users.findOne({_id: owner}, function(err, user){
-//       if (err) {
-//         return console.error(err) //TODO something more useful to handle owner errors
-//       } else {
-//         getListName(user.name, list)
-//       }
-//     })
-//   };
-//
-//   function getListName(owner, list){
-//     db.lists.findOne({_id: list}, function(err, data){
-//       if (err) {
-//         return console.error(err) //TODO something more useful to handle owner errors
-//       } else {
-//         getFeeds(owner, list, data.name)
-//       }
-//     })
-//   };
-//
-//   function getFeeds(owner, list, name){
-//     // find all feeds there this list is included in the feed's 'lists' array
-//     db.feeds.find({lists: list}, function(err, feeds){
-//       if (err) {
-//         return console.error(err) //TODO something more useful to handle owner errors
-//       } else {
-//         // if there is only one feed, the user has *probably* only just started adding them. Show a hint that they will get the next post in their Pocket account.
-//         if (feeds.length > 1) {
-//           renderList(owner, list, name, feeds, false)
-//         } else {
-//           renderList(owner, list, name, feeds, true)
-//         }
-//       }
-//     })
-//   }
-//
-//   function renderList(owner, list, name, feeds, firstFeed){
-//     // get user details
-//   	if (req.session && req.session.passport && req.session.passport.user) {
-//   		db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc){
-//   			if (err) {return console.error('oh no, error! \n' + err)}
-//   			renderPage(doc)
-//   		});
-//     } else {
-//       renderPage()
-//     }
-//     function renderPage(user){
-//       res.render('listdetails', {
-//         appname: settings.APP_NAME,
-//         title: settings.APP_NAME + ' - ' + name,
-//         listid: req.params.listId,
-//         ownerid: req.params.userId,
-//         owner: owner,
-//         name: name,
-//         feeds:feeds,
-//         user: user,
-//         firstfeed: firstFeed
-//       })
-//     }
-//   };
-//
-// // kick things off
-// getOwner(req.params.userId, req.params.listId);
-// });
 
 // GET for adding feeds
 router.get('/:userId/list:listId/addfeed', ensureLoggedIn('/'), function(req, res){
@@ -341,26 +270,17 @@ router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(r
   var feed = req.body.url;
 
   pocketfeeds.checkFeed(feed, function(err, data) {
-    if (err) {
-      console.error(err)
-      // send to error page
-      // PROBLEM - we're already on the error page so this throws a massive error!
-      // can't send headers twice. Can we use a try...catch and deal with it another way?
-      return res.redirect(`/lists/${user}/${list}/error/${err}`);
-    } else {
+    try {
       // update the DB
       db.feeds.update({feed:feed}, {$set: {feed: feed, url: data.url, title: data.title}}, {upsert: true}, function(err, num, doc){
-        if (err) {
-          return res.redirect(`/lists/${user}/${list}/error/${err}`);
-        } else {
           db.feeds.update({feed:feed}, {$addToSet: {lists: list}}, {upsert: true}, function(err, num, doc){
-            if (err) {
-              return res.redirect(`/lists/${user}/${list}/error/${err}`)
-            }
-            return res.redirect(`/lists/${user}/${list}`);
+            res.redirect(`/dashboard`);
           });
-        }
       });
+    } catch (e) {
+      console.log(`there was an error\n${e}`)
+      // here we should add a message for the user
+      res.redirect('/dashboard')
     }
   })
 });

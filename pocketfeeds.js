@@ -89,19 +89,19 @@ pocketfeeds.checkUrl = function(link, callback) {
 // GET TITLE AND URL WHEN YOU ALREADY HAVE THE FEED
 pocketfeeds.checkFeed = function(feed, callback) {
 	// use feedparser to get meta.title and meta.link
-	var req = request(feed)
-	var feedparser = new FeedParser();
-
+	const req = request(feed);
+	const feedparser = new FeedParser();
 	try {
+		var callVals= {};
 		req.on('error', function (error) {
-			return callback('NOFEED', null)
+			callVals = {error: 'NOFEED', data: null};
 		});
 
 		req.on('response', function (res) {
 			var stream = this; // `this` is `req`, which is a stream
 
 			if (res.statusCode !== 200) {
-				return callback('NOSITE', null);
+				callVals = {error: 'NOSITE', data: null}
 			}
 			else {
 				stream.pipe(feedparser);
@@ -109,17 +109,24 @@ pocketfeeds.checkFeed = function(feed, callback) {
 		});
 
 		feedparser.on('error', function (error) {
-			return callback(error, null);
+			callVals = {error: error, data: null};
 		});
 
 		feedparser.on('readable', function () {
 			var stream = this;
 			var meta = this.meta;
 				// get meta and add feed to DB
-				return callback(null, {title: meta.title, url: meta.link, feed: feed})
+				// warning: we can still get to here if the url provided is not a feed but *is* a readable URL
+				if (meta.link) {
+					callVals = {error: null, data: {title: meta.title, url: meta.link, feed: feed}}
+				} else {
+					callVals = {error: 'NOFEED', data: null}
+				}
 		});
+		callback(callVals.error, callVals.data);
 	} catch (err) {
-		return callback(err, null);
+		console.log(`caught error and returning error in callback:\n${err}`)
+		callback(err, null);
 	}
 }
 

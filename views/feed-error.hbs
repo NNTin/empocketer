@@ -5,7 +5,7 @@
 {{#if exists}}
 	<p>If you're sure the site has a feed, and you know the RSS or Atom URL, you can try adding it using the form below.</p>
 	<hr />
-	<form action="/lists/{{owner}}/{{list}}/addfeeddirectly" method="post">
+	<form action="/lists/{{owner}}/{{list}}/addfeeddirectly" method="POST">
 		<label for="url">Add Feed directly: </label>
 		<input id="url" type="url" size="40" name="url">
 		<input class="addFeedButton" type="submit" value="Add It!">
