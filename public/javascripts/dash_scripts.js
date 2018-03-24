@@ -1,3 +1,27 @@
+// add name
+// ADD LIST
+const changeName = document.getElementById('username');
+changeName.addEventListener('click', function(event){
+	event.stopPropagation();
+
+	// function to cancel and hide modal
+	function cancelUsername(event) {
+		event.preventDefault();
+		//clear text field
+		document.getElementById('username').value = "";
+		// hide modal
+		modal.style.display = "none";
+	}
+
+	// show the modal
+	var modal = document.getElementById('usernameModal');
+	modal.style.display = "block";
+	// hide the modal if the user clicks cancel
+	var cancelAdd = document.getElementById('usernameCancel');
+	cancelAdd.addEventListener('click', cancelUsername);
+	// if the user adds a URL and click 'Add' the form will take care of it so no need for anything else here.
+});
+
 // REMOVE LIST
 // listen for clicks on 'delete list'
 const removeListButton = document.getElementsByClassName('delList');
@@ -243,5 +267,3 @@ for (i=0; i<clone.length; i++) {
 		cancelAdd.addEventListener('click', cancelCloneList);
 	};
 }
-
-

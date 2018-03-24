@@ -137,9 +137,9 @@ router.get('/removelist/list:id', ensureLoggedIn('/'), function(req, res){
 
 // POST - this grabs the data entered in the form at /dashboard
 //editing user name
-router.post('/addname', ensureLoggedIn('/'), function(req, res, next) {
+router.get('/addname/', ensureLoggedIn('/'), function(req, res, next) {
   // get the data from the form and update the user record
-  var userName = req.body.name.toString(); //TODO do we need to sanitise this a bit more?
+  var userName = req.query.username.toString(); //TODO do we need to sanitise this a bit more?
   db.users.update({pocket_name: req.session.passport.user}, {$set: {name: userName}}, {}, function(err, num) {
     if (err) {return console.error("shit \n" + err)};
     console.log('replaced ' + num)
