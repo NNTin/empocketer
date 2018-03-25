@@ -1,5 +1,4 @@
 // add name
-// ADD LIST
 const changeName = document.getElementById('usernameButton');
 changeName.addEventListener('click', function(event){
 	event.stopPropagation();
@@ -236,7 +235,7 @@ const opml = document.getElementById('submitOpml');
 const loader = document.getElementById('loader');
 const opmlLoad = document.getElementById('opmlLabel');
 opml.onclick = processing;
-opmlLoad.oninput = preprocess;
+opmlLoad.onchange = preprocess; // oninput doesn't get called in Chrome, use onchange
 
 function preprocess() {
 	opml.style.display = 'inline-block';
