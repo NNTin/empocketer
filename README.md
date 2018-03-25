@@ -1,4 +1,4 @@
-This is a web app built with nodejs and express.
+A web app built with nodejs and express.
 
 # What does empocketer do?
 
@@ -23,10 +23,11 @@ You will need to [register your app with Pocket](https://getpocket.com/developer
 If you want to run it on a server (i.e. not to just test on your own machine) you'll need to set up something like `forever` or `systemd` to keep it running. It will default to run on port 3000 so you'll need to [configure a proxy](https://www.sitepoint.com/configuring-nginx-ssl-node-js/)
 
 # Todos
-* add ability to see all lists that subscribe to a particular site
-* add ability to delete account (will need to remove user id from all subscriptions, QUESTION: what happens to lists the user created that are subscribed to by other people?)
-* Create lists via OPML upload
+* Admin interface, including ability to block users, blacklist certain terms from being used in list names, and possibly ban certain feeds.
+* Account deletion
 * more complete installation instructions including hosting config
+
+See Issues for any other stuff that's being worked on.
 
 # License
 
