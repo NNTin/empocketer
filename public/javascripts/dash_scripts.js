@@ -1,6 +1,6 @@
 // add name
 // ADD LIST
-const changeName = document.getElementById('username');
+const changeName = document.getElementById('usernameButton');
 changeName.addEventListener('click', function(event){
 	event.stopPropagation();
 
@@ -16,6 +16,7 @@ changeName.addEventListener('click', function(event){
 	// show the modal
 	var modal = document.getElementById('usernameModal');
 	modal.style.display = "block";
+	document.getElementById('username').focus();
 	// hide the modal if the user clicks cancel
 	var cancelAdd = document.getElementById('usernameCancel');
 	cancelAdd.addEventListener('click', cancelUsername);
@@ -94,6 +95,7 @@ for (i = 0; i < removeFeedButton.length; i++){
 		var cancel = document.getElementById('deleteCancel');
 		// make the modal visible
 		modal.style.display = "block";
+		cancel.focus();
 		// event listeners for further clicks on Yes or No.
 		confirm.addEventListener('click', removeFeed); // TODO - this is never removed??
 		cancel.addEventListener('click', hideCheckModal);
@@ -155,6 +157,7 @@ addList.addEventListener('click', function(event){
 	// show the modal
 	var modal = document.getElementById('newListModal');
 	modal.style.display = "block";
+	document.getElementById('newListName').focus();
 	// hide the modal if the user clicks cancel
 	var cancelAdd = document.getElementById('addListCancel');
 	cancelAdd.addEventListener('click', cancelAddList);
@@ -181,6 +184,7 @@ for (feed of addFeed) {
 		var formTarget = document.querySelector('#addFeedForm');
 		formTarget.setAttribute('action', `${formTarget.action}/${targetSuffix}`)
 		addFeedModal.style.display = "block";
+		document.getElementById('feedUrl').focus();
 		// hide the modal if the user clicks cancel
 		var cancelAddF = document.getElementById('addFeedCancel');
 		cancelAddF.addEventListener('click', cancelAddFeed);
@@ -254,6 +258,7 @@ for (i=0; i<clone.length; i++) {
 		list = e.target.id;
 		cloneModalList.setAttribute('value', list);
 		cloneModal.style.display = 'block';
+		document.getElementById('clonedListName').focus();
 
 		function cancelCloneList(event) {
 			event.preventDefault();

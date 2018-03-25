@@ -76,7 +76,6 @@ input[type="text"] {
   padding: 0.2em;
   font-size: 1.2em;
   border: 1px solid var(--subtle);
-  color: var(--success);
 }
 
 .modal-label {
@@ -327,7 +326,7 @@ div.logInButton {
   text-decoration: line-through;
 }
 
-#username {
+#usernameButton {
 	color: var(--header-text-color);
 	border-color: var(--header-text-color);
 }
@@ -351,6 +350,7 @@ div.logInButton {
 */
 
 .modal {
+	color: #000;
   display: none;
   position: fixed;
   z-index: 9999;
@@ -376,6 +376,10 @@ div.logInButton {
 
 .modal-add {
   border-top: 2em solid var(--success);
+}
+
+.modal-set {
+  border-top: 2em solid var(--header-text-color);
 }
 
 .modal-opml {
