@@ -93,37 +93,42 @@ pocketfeeds.checkFeed = function(feed, callback) {
 	const feedparser = new FeedParser();
 	try {
 		var callVals= {};
-		req.on('error', function (error) {
-			callVals = {error: 'NOFEED', data: null};
-		});
 
-		req.on('response', function (res) {
-			var stream = this; // `this` is `req`, which is a stream
+		function awaitVals() {
+			return new Promise((resolve, reject) => {
+				req.on('error', function (error) {
+					resolve({error: 'NOFEED', data: null});
+				});
 
-			if (res.statusCode !== 200) {
-				callVals = {error: 'NOSITE', data: null}
-			}
-			else {
-				stream.pipe(feedparser);
-			}
-		});
+				req.on('response', function (res) {
+					var stream = this; // `this` is `req`, which is a stream
 
-		feedparser.on('error', function (error) {
-			callVals = {error: error, data: null};
-		});
+					if (res.statusCode !== 200) {
+						resolve({error: 'NOSITE', data: null});
+					}
+					else {
+						stream.pipe(feedparser);
+					}
+				});
 
-		feedparser.on('readable', function () {
-			var stream = this;
-			var meta = this.meta;
-				// get meta and add feed to DB
-				// warning: we can still get to here if the url provided is not a feed but *is* a readable URL
-				if (meta.link) {
-					callVals = {error: null, data: {title: meta.title, url: meta.link, feed: feed}}
-				} else {
-					callVals = {error: 'NOFEED', data: null}
-				}
-		});
-		callback(callVals.error, callVals.data);
+				feedparser.on('error', function (error) {
+					resolve({error: error, data: null});
+				});
+
+				feedparser.on('readable', function () {
+					var stream = this;
+					var meta = this.meta;
+						// get meta and add feed to DB
+						// warning: we can still get to here if the url provided is not a feed but *is* a readable URL
+						if (meta.link) {
+							resolve({error: null, data: {title: meta.title, url: meta.link, feed: feed}});
+						} else {
+							resolve({error: 'NOFEED', data: null});
+						}
+				});
+			})
+		}
+		awaitVals().then((vals) => callback(vals.error, vals.data));
 	} catch (err) {
 		console.log(`caught error and returning error in callback:\n${err}`)
 		callback(err, null);
@@ -196,16 +201,21 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 
 		function theFeedsFunc(feed) {
 			return new Promise((resolve, reject)=> {
-				pocketfeeds.checkFeed(feed.feed, function(err, result) {
-					if (err) {
-						// TODO really should do something a bit better here, and throw it to the screen somehow.
-						console.error(`error with ${feed.feed} - ${err}`)
-						// we still resolve this, otherwise Promise.all() won't run
-						resolve()
-					} else {
-						resolve({feed: result, listId: feed.list});
-					}
-				})
+				if (feed) {
+					pocketfeeds.checkFeed(feed.feed, function(err, result) { //result here is undefined
+						if (err) {
+							// TODO really should do something a bit better here, and throw it to the screen somehow.
+							console.error(`error with ${feed.feed} - ${JSON.stringify(err, undefined, 4)}`)
+							// we still resolve this, otherwise Promise.all() won't run
+							resolve()
+						} else {
+							resolve({feed: result, listId: feed.list});
+						}
+					})
+				} else {
+					console.error(`error: no feed!`)
+					resolve()
+				}
 			})
 		}
 		// wait for al promises to resolve and then pass on the array
