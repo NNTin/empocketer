@@ -47,10 +47,8 @@
 <div class="accordion__panel">
 	<label for="list{{_id}}" class="toggle-label">
 		{{!-- this is always checked on page load because if the user wasn't subscribed they wouldn't be listed here! --}}
-		<input type="checkbox" id="list{{_id}}" class="subToggle" checked/>
-		<span class="switch sub"></span>
-	</label>
-	<button id="clone{{_id}}" name="{{name}}" class="clone add">Clone this list</button>
+		<input type="checkbox" id="list{{_id}}" class="subToggle" checked/><span class="switch sub"></span></label>
+		<button id="clone{{_id}}" name="{{name}}" class="clone add">Clone this list</button>
 	{{#each feeds}}
 	<li><a href="{{url}}">{{title}}</a></li>
 	{{/each}}

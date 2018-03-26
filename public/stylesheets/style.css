@@ -248,6 +248,8 @@ div.logInButton {
   padding: 0;
 }
 
+.switch,
+.sub,
 .opmlForm {
   display: inline-block;
 	font-size: 17px;
@@ -280,28 +282,38 @@ div.logInButton {
   content: 'Unsubscribe';
 }
 
-.switch::before,
+.add,
+.addFeedButton,
+.delList,
+.sub.switch::before,
+.pub.switch::before,
 .opmlButton::before {
   position: relative;
   display: inline-block;
   line-height: 1.75em;
-  height: 1.9em;
-  color: var(--success);
-  border: 2px solid var(--success);
-  content: 'Make Public';
+	height: 2em;
+	/* height: 1.95em; */
   font-size: 17px;
   padding: 0 1em;
   box-sizing: border-box;
+}
+
+.sub.switch::before {
+	color: var(--header-text-color);
+	border: 2px solid var(--header-text-color);
+  content: 'Subscribe';
+}
+
+.pub.switch::before {
+	color: var(--header-text-color);
+	border: 2px solid var(--header-text-color);
+	content: 'Make Public';
 }
 
 .opmlButton::before {
 	color: var(--header-text-color);
 	border: 2px solid var(--header-text-color);
 	content: 'Use OPML file';
-}
-
-.sub::before {
-  content: 'Subscribe';
 }
 
 .pub::before {
@@ -333,11 +345,13 @@ div.logInButton {
 
 /* Gecko/Firefox hack for positioning spans inside labels */
 @-moz-document url-prefix() {
+	.sub.switch::before,
+	.pub.switch::before,
   .switch::before {
     height: 2em;
   }
 	.opmlButton::before {
-		height: 1.95em;
+		/* height: 1.95em; */
 	}
 }
 
@@ -434,14 +448,41 @@ div.logInButton {
 
   #addNameButton,
   #addListButton,
+	.add,
   .addFeedButton,
   .delList,
   .removeButton,
   .confirm,
   .sendBug,
-  .undelete   {
+	.switch,
+  .undelete {
     margin-top: 0.5em;
     font-size: 0.8em;
+		display: block;
   }
+
+	.switch,
+	.sub,
+	.switch::before,
+	.sub::before,
+	.opmlButton::before,
+	.pub.switch::before,
+	.sub.switch::before,
+	#submitOpml,
+	.cancel,
+	.confirm,
+	.submit	 {
+    font-size: 48px; /* for switch.sub::before on initial load it's not actually displaying this size */
+	}
+
+	.modal-content {
+		/* margin: auto; */
+		width:80%;
+	}
+
+	#feedUrl {
+		font-size: 48px;
+		height: 48px;
+	}
 
 }
