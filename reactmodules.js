@@ -1,6 +1,10 @@
 import React, { Component } from 'react' // react on the server
 import ReactDOM from 'react-dom' // react in the browser
 import 'whatwg-fetch' // fetch
+const moment = require('moment');
+moment().format();
+
+// NOTE inject css here for the time being, though I'd prefer to use a proper stylesheet for consistency with the rest of the app
 
 const styles = {
 	messages:{
@@ -15,6 +19,12 @@ const styles = {
 	suggest:{
 		marginTop: '0.5em',
 		fontStyle: 'italic'
+	},
+	time: {
+		textAlign: 'right',
+		fontStyle: 'italic',
+		color: 'lightgray',
+		fontSize: '0.8em'
 	}
 }
 
@@ -70,6 +80,9 @@ class Messages extends Component {
 						</div>
 						<div style={styles.suggest}>
 						{msg.code === "NOSITE" ? 'Could not find the root URL: try adding the site using the Add New Feed button.' : 'Could not find the feed: Try adding the feed manually.'}
+						</div>
+						<div style={styles.time}>
+						{moment(msg.time).fromNow()}
 						</div>
 					</li>
 				)}

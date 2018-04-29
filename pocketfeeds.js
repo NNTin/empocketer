@@ -11,6 +11,8 @@ var opmltojs  = require('opmltojs');
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 const uuid = require('uuid');
+const moment = require('moment');
+moment().format();
 
 // export
 var pocketfeeds = module.exports = {};
@@ -208,7 +210,7 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 							// Update user messages with an error
 							const text = `Error with ${feed.feed} when processing OPML file.`
 							const code = err;
-							const now = new Date();
+							const now = moment();
 							db.users.update({pocket_name: req.session.passport.user}, {$push: {messages: {id: uuid.v4(), text: text, code: code, time: now}}}, {upsert: true}, function() {
 								console.log('updated')
 							});
