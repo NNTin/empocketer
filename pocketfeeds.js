@@ -27,7 +27,6 @@ var pocketfeeds = module.exports = {};
 pocketfeeds.checkUrl = function(link, callback) {
 	request.get(link, function (error, response, body) {
 		try {
-			// if (!error && response.statusCode == 200) {
 			  const site = body;
 			  const $ = cheerio.load(site)
 				// get the head <title> element
@@ -42,7 +41,6 @@ pocketfeeds.checkUrl = function(link, callback) {
 				var title = null;
 				// elem may be null or not have any child nodes if there is no feed at all so we need to call an error
 				if (!elem[0] || !elem) {
-					// return callback('NOFEED', null)
 					throw "NOFEED"
 					// TODO sometimes there *is* a feed but it's not listed in the headers. Is there another way to try to find it before giving up?
 				} else {
@@ -57,7 +55,7 @@ pocketfeeds.checkUrl = function(link, callback) {
 							// if protocol is not in the headers, use http and hope it gets upgraded if necessary
 							feed = 'http://' + response.req._headers.host + elem[0].attribs.href;
 						}
-						// it's theoretically possible they forgot to set a title on the page
+						// it's possible they forgot to set a title on the page
 						if (titleElem[0].children[0].data) {
 							title = titleElem[0].children[0].data;
 						} else {
@@ -338,8 +336,6 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 		      		}
 		      		// only send the callback if there is one (i.e. from the initial call, below, not the failsafe ones in the flow above)
 		      		if (sendback) {
-								// var newMap = new Map(newFeeds);
-								// console.log(`newMap is ${newMap}`)
 		      			sendback(null, newFeeds)
 		      		}
 		      	}
@@ -356,7 +352,6 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 							})
 
 						buildNewLists(newArray)
-						// finishCallback()
 		  		});
 		  		} catch (err) {
 		  			reject(err)
