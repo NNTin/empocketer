@@ -57,7 +57,7 @@ passport.serializeUser(function(user, done) {
   done(null, user.username);
 });
 
-// deserialise: this allows us to retreive the user from the DB using 'doc' which, since we serialised it this way, is user.username i.e. the Pocket username.
+// deserialise: this allows us to retrieve the user from the DB using 'doc' which, since we serialised it this way, is user.username i.e. the Pocket username.
 passport.deserializeUser(function(user, done) {
   db.users.findOne({pocket_name: user}, function(err, doc){
     if (err) {return 'Ah shit, ', err};

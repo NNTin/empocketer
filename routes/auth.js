@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 // Passport routes for express
 router.get('/pocket',passport.authenticate('pocket', {successReturnToOrRedirect: '/dashboard', failureRedirect: '/error'}), function(req, res){
   // res.redirect('/dashboard')
-  // this should not be called, because Passports send them to Pocket and then /pocket/callback
+  // this should not be called, because Passport sends them to Pocket and then /pocket/callback
 });
 
 // NOTE Using the instructions from passport-pocket, if you click 'no thanks' in the Pocket authentication, the redirects don't work here but it also doesn't render anything: seemingly because passport/session still sets a cookie. And then you can never log in unless you clear the cookie!
