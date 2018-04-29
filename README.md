@@ -8,6 +8,8 @@ _Empocketer_ allows anyone with a [Pocket](https://getpocket.com) account to log
 
 Empocketer uses [Passport](http://www.passportjs.org) and the `passport-pocket` package to handle logins, using Pocket's API based on OAuth. Routing uses [Express](https://expressjs.com/), and the [Handlebars](http://handlebarsjs.com/) template engine. The database is embedded in the app using [nedb-core](https://github.com/nedbhq/nedb-core) and feeds are checked using the ever-reliable [feedparser](https://www.npmjs.com/package/feedparser) package.
 
+Now includes a user message system using React. There will probably be more React components to come.
+
 # Requirements
 
 You will need to [register your app with Pocket](https://getpocket.com/developer/) and get a Pocket Consumer Key. You also need an smtp email host. I recommend [Mailgun](https://www.mailgun.com/) - it's free unless you're sending more than 10,000 emails per month, which seems rather reasonable!

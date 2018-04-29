@@ -2,7 +2,7 @@
 
 const cheerio = require('cheerio');
 var request = require('request');
-var stringify = require('fast-json-stable-stringify'); //not sure if this is really required?
+var stringify = require('fast-json-stable-stringify');
 var app = require('./app');
 var FeedParser = require('feedparser');
 var db = require('./nedb.js');
@@ -10,6 +10,7 @@ var settings = require('./settings');
 var opmltojs  = require('opmltojs');
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
+const uuid = require('uuid');
 
 // export
 var pocketfeeds = module.exports = {};
@@ -204,8 +205,14 @@ pocketfeeds.processOpml = function(req, data, finishCallback) {
 				if (feed) {
 					pocketfeeds.checkFeed(feed.feed, function(err, result) { //result here is undefined
 						if (err) {
-							// TODO really should do something a bit better here, and throw it to the screen somehow.
-							console.error(`error with ${feed.feed} - ${JSON.stringify(err, undefined, 4)}`)
+							// Update user messages with an error
+							const text = `Error with ${feed.feed} when processing OPML file.`
+							const code = err;
+							const now = new Date();
+							db.users.update({pocket_name: req.session.passport.user}, {$push: {messages: {id: uuid.v4(), text: text, code: code, time: now}}}, {upsert: true}, function() {
+								console.log('updated')
+							});
+
 							// we still resolve this, otherwise Promise.all() won't run
 							resolve()
 						} else {

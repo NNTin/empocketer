@@ -165,4 +165,20 @@ router.get('/addlist/', ensureLoggedIn('/'), function(req, res, next) {
     });
   })
 })
+
+// send message data to dashboard (used by React component)
+router.get('/messages', ensureLoggedIn('/'), function(req, res, next) {
+  db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc) {
+    res.json(doc.messages)
+  })
+})
+
+// delete message and return remaining messages
+router.get('/dismiss-message/:msgId', ensureLoggedIn('/'), function(req, res, next) {
+  db.users.update({pocket_name: req.session.passport.user}, {$pull: {messages: {id: req.params.msgId}}}, {returnUpdatedDocs: true}, function(err, num, doc) {
+    res.json(doc.messages)
+  });
+})
+
+// export everything to router
 module.exports = router;

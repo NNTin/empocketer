@@ -29,6 +29,7 @@ table {
   --success: #6dc066;
   --warning: #ffa500;
   --failure: #fd482f;
+	--failborder: #e3402a;
   --subtle: #c0c0c0;
 }
 
@@ -353,6 +354,15 @@ div.logInButton {
 	.opmlButton::before {
 		/* height: 1.95em; */
 	}
+}
+
+#messages li {
+	border: 2px solid var(--failborder);
+	background-color: var(--failure);
+	color: #fff;
+	padding: 1em;
+	margin: 0.5em;
+	text-align: center;
 }
 
 /*

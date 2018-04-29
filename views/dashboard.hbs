@@ -4,6 +4,10 @@
 <p>This app is currently in Alpha and will <del>probably</del> definitely have bugs. Please report any problems using the <a href="/bugs">bug reporter</a>, or send a tweet/DM to <a href="https://twitter.com/hughrundle">@hughrundle</a>.
 
 <hr/>
+
+{{!-- this will be a react component --}}
+<div id="messages"></div>
+
 <button id="usernameButton" class="add">{{#if user.name}}Edit username{{else}}Add a username{{/if}}</button>
 <button id="addListButton" class="add">Create a new list</button>
 <form class="opmlForm" name="opmlform" action="/lists/opml" method="post" enctype="multipart/form-data"><label id="opmlLabel" class="toggle-label" for="opml"><input id="opml" name="opmlfile" type="file" class="opml" accept=".opml"/><span class="opmlButton"></span></label>
@@ -118,3 +122,5 @@
 <script src='/javascripts/dash_scripts.js'></script>
 {{!-- script to run accordion --}}
 <script src='/javascripts/aria.accordion.min.js'></script>
+{{!-- script for react components --}}
+<script src="/javascripts/reactbundle.js"></script>
