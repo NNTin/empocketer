@@ -8,6 +8,7 @@ var settings = require('../settings');
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var fs = require('fs');
+const uuid = require('uuid');
 // require local files
 var getlists = require('../getlists');
 var db = require('../nedb.js');
@@ -279,7 +280,13 @@ router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(r
       });
     } catch (e) {
       console.log(`there was an error\n${e}`)
-      // here we should add a message for the user
+      // Update user messages with an error
+      const text = `Error with ${feed} when attempting to add feed manually.\nEmpocketer just doesn't like this feed :-(`
+      const code = err;
+      const now = new Date();
+      db.users.update({pocket_name: req.session.passport.user}, {$push: {messages: {id: uuid.v4(), text: text, code: code, time: now}}}, {upsert: true}, function() {
+        console.log('updated')
+      });
       res.redirect('/dashboard')
     }
   })

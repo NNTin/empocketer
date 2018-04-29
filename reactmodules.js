@@ -59,7 +59,6 @@ class Messages extends Component {
 		.then(res => res.json())
 		.then(json => {
 				const messages = json;
-				console.log(messages)
 				this.setState({messages})
 			}
 		)
