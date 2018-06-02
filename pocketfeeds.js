@@ -23,8 +23,9 @@ var pocketfeeds = module.exports = {};
 
 // take a site URL and get the title and RSS URL
 pocketfeeds.checkUrl = function(link, callback) {
-	request.get(link, function (error, response, body) {
-		try {
+	return new Promise ((resolve, reject) => {
+		request.get(link, function (error, response, body) {
+			try {
 			  const site = body;
 			  const $ = cheerio.load(site)
 				// get the head <title> element
@@ -73,17 +74,18 @@ pocketfeeds.checkUrl = function(link, callback) {
 				  }
 					// TODO put the code for checking the title here
 				}
-			return callback(err, {feed: feed, title: title});
-		} catch (error) {
-			// this error will be thrown if the URL doesn't exist
-			if (error.message === "Cannot read property 'parent' of undefined") {
-				return callback('NOSITE', null);
-			} else {
-				return callback(error, null)
+				resolve({url: link, feed: feed, title: title})
+			} catch (error) {
+				// this error will be thrown if the URL doesn't exist
+				if (error.message === "Cannot read property 'parent' of undefined") {
+					resolve({error: 'NOSITE'})
+				} else {
+					resolve({error: error})
+				}
 			}
-		}
-	});
-}
+		})
+	})
+};
 
 // GET TITLE AND URL WHEN YOU ALREADY HAVE THE FEED
 pocketfeeds.checkFeed = function(feed, callback) {
@@ -135,6 +137,7 @@ console.log(`status code is ${res.statusCode}`)
 }
 
 // PROCESS OPML FILE
+// TODO: update this so that it uses the title already in the OPML file
 pocketfeeds.processOpml = function(req, data, finishCallback) {
 
 	// this takes the new array of objects from buildLists and inserts a new list for each heading

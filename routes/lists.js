@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn; // might have been nice for this to be in the README 🙄
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var settings = require('../settings');
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
@@ -293,6 +293,7 @@ router.post('/:ownerid/:listid/addfeeddirectly', ensureLoggedIn('/'), function(r
 });
 
 // toggle publicness of lists
+// this is now superseded buy the router.get underneath
 router.post('/toggle/owner:owner-list:id/:pub', ensureLoggedIn('/'), function(req, res){
 
   getUser(req.session.passport.user).then((user) => {
@@ -310,6 +311,23 @@ router.post('/toggle/owner:owner-list:id/:pub', ensureLoggedIn('/'), function(re
       res.send('Permission Denied')
     }
   });
+});
+
+router.get('/toggle/id:id', ensureLoggedIn('/'), function(req, res){
+  getUser(req.session.passport.user)
+  .then(user => {
+    db.lists.findOne({_id: req.params.id}, function(err, docs) {
+      // make sure the list belongs to the logged in user
+      if (user._id === docs.owner) {
+        // flip the privacy value
+        db.lists.update({_id: req.params.id}, {$set: {public: !docs.public}}, {returnUpdatedDocs: true}, function(err, num, updatedDocs, upsert){
+          if (err) return console.error(err);
+          // return the list document so react state can be updated in the client
+          return res.json(updatedDocs)
+        })
+      }
+    })
+  })
 });
 
 // toggle subscriptions

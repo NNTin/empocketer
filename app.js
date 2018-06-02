@@ -12,6 +12,7 @@ var auth = require('./routes/auth');
 var del = require('./routes/del');
 var bugs = require('./routes/bugs');
 var todos = require('./routes/todos');
+var api = require('./routes/api');
 var settings = require('./settings');
 // *******************************
 // SESSION                       *
@@ -31,6 +32,7 @@ app.use(cookieParser(settings.COOKIE_SECRET));
 app.use(session(settings.SESSION_PARAMS));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json()); // for parsing application/json
 
 // *******************************
 // POCKET AUTHENTICATION         *
@@ -85,6 +87,7 @@ app.use('/del', del);
 app.use('/lists', lists);
 app.use('/bugs', bugs);
 app.use('/todos', todos);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -8,6 +8,8 @@ body {
 }
 ol, ul {
 	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
 }
 blockquote, q {
 	quotes: none;
@@ -66,7 +68,7 @@ code {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--header-text-color);
+  color: #3c3c3c;
 }
 
 hr {
@@ -93,10 +95,6 @@ main {
 
 textarea {
   border: 1px solid var(--subtle);
-}
-
-ul {
-  list-style-type: none;
 }
 
 footer {
@@ -357,13 +355,97 @@ div.logInButton {
 }
 
 /* user messages. May need to give this its own section or at least put it somewhere more logical */
-#messages li {
+.userMessages li {
 	border: 2px solid var(--failborder);
 	background-color: var(--failure);
 	color: #fff;
 	padding: 1em;
 	margin: 0.5em;
 	text-align: center;
+}
+
+/* new listings */
+
+.listcard {
+	width: 300px;
+	height: 300px;
+	display: inline-block;
+	perspective: 1200px;
+	margin: 1em;
+}
+
+.flip {
+	transform-style: preserve-3d;
+	position: relative;
+	transition: transform 0.8s;
+}
+
+.list {
+	box-sizing: border-box;
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	left:0;
+	padding: 1em;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	background: #fff;
+	border: 2px solid var(--header-text-color);
+	overflow: scroll;
+}
+
+.private {
+	border: 2px solid var(--success)
+}
+
+.public {
+	border: 2px solid var(--warning)
+}
+
+.back {
+	transform: rotateY(-180deg);
+	background: var(--header-text-color);
+	border: 2px solid var(--header-text-color);
+}
+
+.back.public {
+	/* background: var(--warning) */
+}
+
+.back.private {
+	/* background: var(--success); */
+}
+
+.flipped {
+	transform: rotateY(-180deg);
+}
+
+.feedListing {
+	color: #fff;
+	margin-bottom: 0.5em;
+}
+
+.new {
+	border: 2px dotted var(--subtle);
+}
+
+.back.subscription {
+	background: var(--header-text-color);
+}
+
+.adding {
+	background: var(--success);
+	border: 2px solid var(--success);
+}
+
+.addFeedContainer {
+	text-align: center;
+	color: #fff;
+}
+
+.addFeedName {
+	width: 90%;
+	font-size: 14px;
 }
 
 /*

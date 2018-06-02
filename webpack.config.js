@@ -1,6 +1,6 @@
 module.exports = options => {
   return {
-    entry: ['whatwg-fetch', './reactmodules.js'],
+    entry: ['whatwg-fetch', './react_modules/reactmodules.js'],
     output: {
       filename: '../public/javascripts/reactbundle.js',
     },

@@ -169,7 +169,7 @@ router.get('/addlist/', ensureLoggedIn('/'), function(req, res, next) {
 // send message data to dashboard (used by React component)
 router.get('/messages', ensureLoggedIn('/'), function(req, res, next) {
   db.users.findOne({pocket_name: req.session.passport.user}, function(err, doc) {
-    res.json(doc.messages)
+    res.json(doc.messages ? doc.messages : {})
   })
 })
 
@@ -179,6 +179,70 @@ router.get('/dismiss-message/:msgId', ensureLoggedIn('/'), function(req, res, ne
     res.json(doc.messages)
   });
 })
+
+// get info about current user's lists. This used to be called from /dashboard directly but doing it this way makes it an AJAX call for React components.
+router.get('/user-lists', ensureLoggedIn('/'), function(req, res, next) {
+    function getUser() {
+      db.users.findOne({pocket_name: req.session.passport.user}, async function(err, doc){
+        if (err) {return console.error('oh no, error! \n' + err)}
+        var user = doc;
+        const lists = await getlists.byname({owner: user._id});
+        getFeeds(user, lists)
+      })
+    };
+
+    // called by getUser, here we're checking whether there are any feeds in the user lists
+    // this is so we can make onboarding easier by showing a hint if the user hasn't added any feeds yet.
+    function getFeeds(user, lists) {
+      // we use Promises and async/await because otherwise the function will return before we have time to check the database and loop through the lists.
+
+      // the Promise comes from checking the database
+      function checkFeeds(list) {
+        return new Promise((resolve, reject) => {
+          db.feeds.findOne({lists: list._id}, function(err, doc){
+            if (err) {
+              console.error(err)
+              reject(console.error(err))
+            } else if (doc) {
+              resolve(true)
+            } else {
+              resolve(false)
+            }
+          })
+        })
+      };
+
+      // loop through each list, and await the DB check
+      async function checkLists(lists) {
+        for (const list of lists) {
+          var hasFeed = await checkFeeds(list);
+          if (hasFeed) {
+            return true
+            break;
+          } // else just don't do anything
+        }
+      }
+
+      // await the loop so it has a chance to finish running before rending the page
+      async function waitForFeeds(){
+        let feeds = await checkLists(lists);
+        let subscriptions = await getlists.byname({$not: {owner: user._id}, subscribers: user.pocket_token})
+        // if there are any feeds for this user, checkLists will return true and then break the loop;
+        // if there are no feeds, checkists returns nothing, so feeds will be undefined (i.e. falsy)
+        return {user: user, lists: lists, feeds: feeds, subscriptions: subscriptions}
+      }
+      // here's the trigger to start everything
+      waitForFeeds()
+      .then(sendUserDataToReactComponent);
+    }
+
+    // this is called by the getUser function so all the values are already retrieved
+    function sendUserDataToReactComponent(payload) {
+      res.json(payload)
+    };
+    // this triggers everything.
+    getUser()
+});
 
 // export everything to router
 module.exports = router;
